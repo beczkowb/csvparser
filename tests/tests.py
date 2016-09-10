@@ -12,7 +12,7 @@ class AdPerformanceReportParser(csvparser.Parser):
     cost = csvparser.DecimalField()
     ad_id = csvparser.CharField()
 
-    default_fields_order = ['impressions', 'clicks', 'conversions',
+    fields_order = ['impressions', 'clicks', 'conversions',
                             'cost', 'ad_id']
 
 

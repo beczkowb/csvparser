@@ -3,7 +3,7 @@ import decimal
 
 
 class Parser(object):
-    default_fields_order = None
+    fields_order = None
 
     @classmethod
     def parse_file(cls, file_path, start_from_line=1, end_at_line=None, csv_reader=csv.reader, **kwargs):
@@ -25,7 +25,7 @@ class Parser(object):
 
     @classmethod
     def get_all_field_names_declared_by_user(cls):
-        return cls.default_fields_order
+        return cls.fields_order
 
 
 class ParserField(object):

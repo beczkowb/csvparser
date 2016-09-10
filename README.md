@@ -23,9 +23,9 @@ class AdPerformanceReportParser(csvparser.Parser):
     conversions = csvparser.IntegerField()
     cost = csvparser.DecimalField()
     ad_id = csvparser.CharField()
-
-    default_fields_order = ['impressions', 'clicks', 'conversions',  # YOU HAVE TO set this attribute
-                            'cost', 'ad_id']
+    
+    # YOU HAVE TO set this attribute
+    fields_order = ['impressions', 'clicks', 'conversions', 'cost', 'ad_id']
 ```
 
 Then parse file and get rows as objects:
