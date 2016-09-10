@@ -29,21 +29,16 @@ class Parser(object):
 
 
 class ParserField(object):
+    fields_counter = 0
+
     def __init__(self):
         self.name = None
         self.init_done = False
+        self.name = '_parser_field' + str(ParserField.fields_counter)
+        ParserField.fields_counter += 1
 
     def __set__(self, instance, value):
-        if not self.init_done:
-            cls = instance.__class__
-            for field, object in cls.__dict__.items():
-                if id(object) == id(self):
-                    self.name = '_' + field
-                    setattr(instance, self.name, value)
-                    self.init_done = True
-                    break
-        else:
-            setattr(instance, self.name, value)
+        setattr(instance, self.name, value)
 
 
 class IntegerField(ParserField):
