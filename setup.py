@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
   name = 'csvparser',
   packages = ['csvparser'],
-  version = '0.1.1',
+  version = '0.1.2',
   description = 'Library for parsing csv files using declared django-style parser classes.',
   author = 'Bartłomiej Bęczkowski',
   author_email = 'beczkowb@gmail.com',
