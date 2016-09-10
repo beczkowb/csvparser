@@ -6,9 +6,9 @@ class Parser(object):
     default_fields_order = None
 
     @classmethod
-    def parse_file(cls, file_path, csv_reader=csv.reader, *args, **kwargs):
+    def parse_file(cls, file_path, csv_reader=csv.reader, **kwargs):
         with open(file_path, 'r') as file:
-            reader = csv_reader(file, *args, **kwargs)
+            reader = csv_reader(file, **kwargs)
             fields = cls.get_all_field_names_declared_by_user()
 
             for row in reader:
