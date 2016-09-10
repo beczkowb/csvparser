@@ -1,6 +1,9 @@
 # About
-Simple lib for parsing csv files by declaring django-style parsers.
+Library for parsing csv files using declared django-style parser classes.
 It uses standard csv package.
+
+# Installation
+`pip install csvreader`
 
 # Usage
 Lets say that you want parse csv like below. We want to skip first row(header) and last(summary):
