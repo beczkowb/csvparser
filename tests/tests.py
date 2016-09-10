@@ -18,6 +18,7 @@ class ParserTestCase(unittest.TestCase):
         file_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
             'test_files', 'adperformancereport.csv')
+
         rows = AdPerformanceReportParser.parse_file(file_path=file_path)
         rows = list(rows)
         row1, row2 = rows
