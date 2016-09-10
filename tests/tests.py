@@ -115,7 +115,7 @@ class ParserTestCase(unittest.TestCase):
         rows = AdPerformanceReportParser.parse_file(
             file_path=self.simple_test_file_with_headers_and_summary_path,
             start_from_line=2,
-            end_at_line=2  # inclusive
+            end_at_line=3  # inclusive
         )
         rows = list(rows)
         row1, row2 = rows
@@ -131,6 +131,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(row2.conversions, 900)
         self.assertEqual(row2.cost, decimal.Decimal('202000.44'))
         self.assertEqual(row2.ad_id, '8324125')
+
 
 if __name__ == '__main__':
     unittest.main()
