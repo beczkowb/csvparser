@@ -1,6 +1,6 @@
 # About
 Library for parsing csv files using declared django-style parser classes.
-It uses standard csv package.
+It uses standard csv package. Tested on python3.4.
 
 # Installation
 `pip install csvreader`
