@@ -6,7 +6,7 @@ class Parser(object):
     default_fields_order = None
 
     @classmethod
-    def parse_file(cls, file_path, start_from_line=1, csv_reader=csv.reader, **kwargs):
+    def parse_file(cls, file_path, start_from_line=1, end_at_line=None, csv_reader=csv.reader, **kwargs):
         with open(file_path, 'r') as file:
             reader = csv_reader(file, **kwargs)
             fields = cls.get_all_field_names_declared_by_user()
@@ -14,7 +14,10 @@ class Parser(object):
             for skiped_row in range(1, start_from_line):
                 next(reader)
 
-            for row in reader:
+            for line_num, row in enumerate(reader, start=1):
+                if end_at_line is not None and line_num > end_at_line:
+                    break
+
                 instance = cls()
                 for i, field in enumerate(fields):
                     setattr(instance, field, row[i])
