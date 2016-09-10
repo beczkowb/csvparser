@@ -33,3 +33,11 @@ Then parse file and get rows as objects:
 ```python
 rows = AdPerformanceReportParser.parse_file('/some/path/to/file', start_from_line=2, end_at_line=3)  # parse_file returns iterator 
 ```
+
+To customize your parser you can pass your csv.reader and additional arguments for it as kwargs to `parse_file` method:
+```python
+import csv
+
+rows = AdPerformanceReportParser.parse_file('/some/path/to/file', start_from_line=2, end_at_line=3,
+                                            csv_reader=csv.reader, delimiter=';', quotechar='|') 
+```

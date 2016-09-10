@@ -11,7 +11,7 @@ class Parser(object):
             reader = csv_reader(file, **kwargs)
             fields = cls.get_all_field_names_declared_by_user()
 
-            for skiped_row in range(1, start_from_line):
+            for skipped_row in range(1, start_from_line):
                 next(reader)
 
             for line_num, row in enumerate(reader, start=start_from_line):
