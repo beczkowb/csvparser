@@ -1,5 +1,6 @@
 import csv
 import decimal
+import operator
 
 
 class Parser(object):
@@ -84,29 +85,27 @@ class CharField(ParserField):
             return getattr(instance, self.name)
 
 
-class CharFieldMaxLengthValidator(object):
+class CharFieldLengthValidator(object):
+    def __init__(self, threshold, compare_operator, error_message):
+        self.threshold = threshold
+        self.errors = []
+        self.compare_operator = compare_operator
+        self.error_message = error_message
+
+    def is_valid(self, string):
+        string_is_valid = self.compare_operator(len(string), self.threshold)
+        if string_is_valid:
+            return True
+        else:
+            self.errors = [self.error_message]
+            return False
+
+
+class CharFieldMaxLengthValidator(CharFieldLengthValidator):
     def __init__(self, max_length):
-        self.max_length = max_length
-        self.errors = ()
-
-    def is_valid(self, string):
-        string_is_valid = len(string) <= self.max_length
-        if string_is_valid:
-            return True
-        else:
-            self.errors = ['CharField len bigger than max_length']
-            return False
+        super().__init__(max_length, operator.le, 'CharField len bigger than max_length')
 
 
-class CharFieldMinLengthValidator(object):
+class CharFieldMinLengthValidator(CharFieldLengthValidator):
     def __init__(self, min_length):
-        self.min_length = min_length
-        self.errors = ()
-
-    def is_valid(self, string):
-        string_is_valid = len(string) >= self.min_length
-        if string_is_valid:
-            return True
-        else:
-            self.errors = ['CharField len smaller than min_length']
-            return False
+        super().__init__(min_length, operator.ge, 'CharField len smaller than min_length')
