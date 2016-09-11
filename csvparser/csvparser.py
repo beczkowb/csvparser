@@ -101,9 +101,9 @@ class CompareValidator(object):
         self.compare_operator = compare_operator
         self.error_message_template = error_message_template
 
-    def is_valid(self, string, field_name):
-        string_is_valid = self.apply_operator(string)
-        if string_is_valid:
+    def is_valid(self, validated_object, field_name):
+        object_is_valid = self.apply_operator(validated_object)
+        if object_is_valid:
             return True
         else:
             self.errors = [self.error_message_template.format(field_name=field_name)]
