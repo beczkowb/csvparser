@@ -187,7 +187,32 @@ class CharFieldWithLengthValidatorTestCase(unittest.TestCase):
         self.assertEqual(A.test_charfield.errors(valid_test_object), [])
         self.assertEqual(A.test_charfield.errors(invalid_test_object), ['CharField len bigger than max_length'])
 
+    def test_with_2_validators(self):
 
+        class A(object):
+            test_charfield = csvparser.CharField(
+                validators=[
+                    csvparser.CharFieldMaxLengthValidator(max_length=5),
+                    csvparser.CharFieldMinLengthValidator(min_length=1)
+                ]
+            )
+
+        valid_test_object = A()
+        valid_test_object.test_charfield = '1'
+
+        invalid_test_object = A()
+        invalid_test_object.test_charfield = ''
+
+        invalid_test_object2 = A()
+        invalid_test_object2.test_charfield = '123456'
+
+        self.assertEqual(A.test_charfield.is_valid(valid_test_object, A), True)
+        self.assertEqual(A.test_charfield.is_valid(invalid_test_object, A), False)
+        self.assertEqual(A.test_charfield.is_valid(invalid_test_object2, A), False)
+
+        self.assertEqual(A.test_charfield.errors(valid_test_object), [])
+        self.assertEqual(A.test_charfield.errors(invalid_test_object), ['CharField len smaller than min_length'])
+        self.assertEqual(A.test_charfield.errors(invalid_test_object2), ['CharField len bigger than max_length'])
 
 
 if __name__ == '__main__':

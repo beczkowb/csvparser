@@ -96,3 +96,17 @@ class CharFieldMaxLengthValidator(object):
         else:
             self.errors = ['CharField len bigger than max_length']
             return False
+
+
+class CharFieldMinLengthValidator(object):
+    def __init__(self, min_length):
+        self.min_length = min_length
+        self.errors = ()
+
+    def is_valid(self, string):
+        string_is_valid = len(string) >= self.min_length
+        if string_is_valid:
+            return True
+        else:
+            self.errors = ['CharField len smaller than min_length']
+            return False
