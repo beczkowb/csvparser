@@ -31,19 +31,44 @@ class Parser(object):
 class ParserField(object):
     fields_counter = 0
 
-    def __init__(self):
+    def __init__(self, validators=None):
+        if validators is None:
+            self.validators = []
+        else:
+            self.validators = validators
+
         self.name = None
         self.init_done = False
         self.name = '_parser_field' + str(ParserField.fields_counter)
+        self.errors_field_name = '_parser_field_errors' + str(ParserField.fields_counter)
         ParserField.fields_counter += 1
 
     def __set__(self, instance, value):
         setattr(instance, self.name, value)
 
+    def is_valid(self, instance, cls):
+        value = self.__get__(instance, cls)
+        setattr(instance, self.errors_field_name, [])
+        valid = True
+
+        for validator in self.validators:
+            if not validator.is_valid(value):
+                current_errors = getattr(instance, self.errors_field_name)
+                current_errors.extend(validator.errors)
+                valid = False
+
+        return valid
+
+    def errors(self, instance):
+        return getattr(instance, self.errors_field_name)
+
 
 class IntegerField(ParserField):
     def __get__(self, instance, cls):
-        return int(getattr(instance, self.name))
+        if instance is None:
+            return self
+        else:
+            return int(getattr(instance, self.name))
 
 
 class DecimalField(ParserField):
@@ -53,4 +78,21 @@ class DecimalField(ParserField):
 
 class CharField(ParserField):
     def __get__(self, instance, cls):
-        return getattr(instance, self.name)
+        if instance is None:
+            return self
+        else:
+            return getattr(instance, self.name)
+
+
+class CharFieldMaxLengthValidator(object):
+    def __init__(self, max_length):
+        self.max_length = max_length
+        self.errors = ()
+
+    def is_valid(self, string):
+        string_is_valid = len(string) <= self.max_length
+        if string_is_valid:
+            return True
+        else:
+            self.errors = ['CharField len bigger than max_length']
+            return False

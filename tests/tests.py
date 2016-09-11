@@ -13,7 +13,7 @@ class AdPerformanceReportParser(csvparser.Parser):
     ad_id = csvparser.CharField()
 
     fields_order = ['impressions', 'clicks', 'conversions',
-                            'cost', 'ad_id']
+                    'cost', 'ad_id']
 
 
 class ParserTestCase(unittest.TestCase):
@@ -157,6 +157,37 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(row2.conversions, 900)
         self.assertEqual(row2.cost, decimal.Decimal('202000.44'))
         self.assertEqual(row2.ad_id, '8324125')
+
+
+class CharFieldMaxLengthValidatorTestCase(unittest.TestCase):
+    def test(self):
+        validator = csvparser.CharFieldMaxLengthValidator(max_length=10)
+        valid_string = '12345'
+        invalid_string = '1234567891011'
+        self.assertEqual(validator.is_valid(valid_string), True)
+        self.assertEqual(validator.is_valid(invalid_string), False)
+        self.assertEqual(validator.errors, ['CharField len bigger than max_length'])
+
+
+class CharFieldWithLengthValidatorTestCase(unittest.TestCase):
+    def test(self):
+
+        class A(object):
+            test_charfield = csvparser.CharField(validators=[csvparser.CharFieldMaxLengthValidator(max_length=5)])
+
+        valid_test_object = A()
+        valid_test_object.test_charfield = '1234'
+
+        invalid_test_object = A()
+        invalid_test_object.test_charfield = '123456'
+
+        self.assertEqual(A.test_charfield.is_valid(valid_test_object, A), True)
+        self.assertEqual(A.test_charfield.is_valid(invalid_test_object, A), False)
+
+        self.assertEqual(A.test_charfield.errors(valid_test_object), [])
+        self.assertEqual(A.test_charfield.errors(invalid_test_object), ['CharField len bigger than max_length'])
+
+
 
 
 if __name__ == '__main__':
