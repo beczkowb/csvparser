@@ -101,14 +101,19 @@ class CompareValidator(object):
             return False
 
     def apply_operator(self, value):
+        pass
+
+
+class CharFieldLengthValidator(CompareValidator):
+    def apply_operator(self, value):
         return self.compare_operator(len(value), self.threshold)
 
 
-class CharFieldMaxLengthValidator(CompareValidator):
+class CharFieldMaxLengthValidator(CharFieldLengthValidator):
     def __init__(self, max_length):
         super().__init__(max_length, operator.le, 'CharField len bigger than max_length')
 
 
-class CharFieldMinLengthValidator(CompareValidator):
+class CharFieldMinLengthValidator(CharFieldLengthValidator):
     def __init__(self, min_length):
         super().__init__(min_length, operator.ge, 'CharField len smaller than min_length')
