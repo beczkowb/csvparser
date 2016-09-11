@@ -215,5 +215,10 @@ class CharFieldWithLengthValidatorTestCase(unittest.TestCase):
         self.assertEqual(A.test_charfield.errors(invalid_test_object2), ['CharField len bigger than max_length'])
 
 
+class IntegerFieldGreaterThan(unittest.TestCase):
+    def test(self):
+        pass
+
+
 if __name__ == '__main__':
     unittest.main()

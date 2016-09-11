@@ -85,7 +85,7 @@ class CharField(ParserField):
             return getattr(instance, self.name)
 
 
-class CharFieldLengthValidator(object):
+class CompareValidator(object):
     def __init__(self, threshold, compare_operator, error_message):
         self.threshold = threshold
         self.errors = []
@@ -93,19 +93,22 @@ class CharFieldLengthValidator(object):
         self.error_message = error_message
 
     def is_valid(self, string):
-        string_is_valid = self.compare_operator(len(string), self.threshold)
+        string_is_valid = self.apply_operator(string)
         if string_is_valid:
             return True
         else:
             self.errors = [self.error_message]
             return False
 
+    def apply_operator(self, value):
+        return self.compare_operator(len(value), self.threshold)
 
-class CharFieldMaxLengthValidator(CharFieldLengthValidator):
+
+class CharFieldMaxLengthValidator(CompareValidator):
     def __init__(self, max_length):
         super().__init__(max_length, operator.le, 'CharField len bigger than max_length')
 
 
-class CharFieldMinLengthValidator(CharFieldLengthValidator):
+class CharFieldMinLengthValidator(CompareValidator):
     def __init__(self, min_length):
         super().__init__(min_length, operator.ge, 'CharField len smaller than min_length')
