@@ -46,6 +46,12 @@ class ParserField(object):
         self.errors_field_name = '_parser_field_errors' + str(ParserField.fields_counter)
         ParserField.fields_counter += 1
 
+    def __get__(self, instance, cls):
+        if instance is None:
+            return self
+        else:
+            return self.create_real_value(getattr(instance, self.name))
+
     def __set__(self, instance, value):
         setattr(instance, self.name, value)
 
@@ -55,7 +61,7 @@ class ParserField(object):
         valid = True
 
         for validator in self.validators:
-            if not validator.is_valid(value, field_name):
+            if not validator.is_valid(self.create_real_value(value), field_name):
                 current_errors = getattr(instance, self.errors_field_name)
                 current_errors.extend(validator.errors)
                 valid = False
@@ -65,26 +71,27 @@ class ParserField(object):
     def errors(self, instance):
         return getattr(instance, self.errors_field_name)
 
+    @staticmethod
+    def create_real_value(raw_value):
+        pass
+
 
 class IntegerField(ParserField):
-    def __get__(self, instance, cls):
-        if instance is None:
-            return self
-        else:
-            return int(getattr(instance, self.name))
+    @staticmethod
+    def create_real_value(raw_value):
+        return int(raw_value)
 
 
 class DecimalField(ParserField):
-    def __get__(self, instance, cls):
-        return decimal.Decimal(getattr(instance, self.name))
+    @staticmethod
+    def create_real_value(raw_value):
+        return decimal.Decimal(raw_value)
 
 
 class CharField(ParserField):
-    def __get__(self, instance, cls):
-        if instance is None:
-            return self
-        else:
-            return getattr(instance, self.name)
+    @staticmethod
+    def create_real_value(raw_value):
+        return raw_value
 
 
 class CompareValidator(object):
@@ -121,3 +128,12 @@ class CharFieldMinLengthValidator(CharFieldLengthValidator):
     def __init__(self, min_length):
         super().__init__(min_length, operator.ge,
                          '{field_name} len smaller than min_length')
+
+
+class IntegerFieldMaxValidator(CompareValidator):
+    def __init__(self, max_value):
+        super().__init__(max_value, operator.le,
+                         '{field_name} bigger than max')
+
+    def apply_operator(self, value):
+        return self.compare_operator(value, self.threshold)

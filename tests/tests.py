@@ -217,7 +217,25 @@ class CharFieldWithLengthValidatorTestCase(unittest.TestCase):
 
 class IntegerFieldGreaterThan(unittest.TestCase):
     def test(self):
-        pass
+        class A(object):
+            test_integerfield = csvparser.IntegerField(
+                validators=[
+                    csvparser.IntegerFieldMaxValidator(max_value=5),
+                ]
+            )
+
+        valid_test_object = A()
+        valid_test_object.test_integerfield = '1'
+
+        invalid_test_object = A()
+        invalid_test_object.test_integerfield = '30'
+
+        self.assertEqual(A.test_integerfield.is_valid(valid_test_object, A, 'test_integerfield'), True)
+        self.assertEqual(A.test_integerfield.is_valid(invalid_test_object, A, 'test_integerfield'), False)
+
+        self.assertEqual(A.test_integerfield.errors(valid_test_object), [])
+        self.assertEqual(A.test_integerfield.errors(invalid_test_object), ['test_integerfield bigger than max'])
+
 
 
 if __name__ == '__main__':
