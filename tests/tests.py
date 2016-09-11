@@ -164,9 +164,9 @@ class CharFieldMaxLengthValidatorTestCase(unittest.TestCase):
         validator = csvparser.CharFieldMaxLengthValidator(max_length=10)
         valid_string = '12345'
         invalid_string = '1234567891011'
-        self.assertEqual(validator.is_valid(valid_string), True)
-        self.assertEqual(validator.is_valid(invalid_string), False)
-        self.assertEqual(validator.errors, ['CharField len bigger than max_length'])
+        self.assertEqual(validator.is_valid(valid_string, 'test_charfield'), True)
+        self.assertEqual(validator.is_valid(invalid_string, 'test_charfield'), False)
+        self.assertEqual(validator.errors, ['test_charfield len bigger than max_length'])
 
 
 class CharFieldWithLengthValidatorTestCase(unittest.TestCase):
@@ -181,11 +181,11 @@ class CharFieldWithLengthValidatorTestCase(unittest.TestCase):
         invalid_test_object = A()
         invalid_test_object.test_charfield = '123456'
 
-        self.assertEqual(A.test_charfield.is_valid(valid_test_object, A), True)
-        self.assertEqual(A.test_charfield.is_valid(invalid_test_object, A), False)
+        self.assertEqual(A.test_charfield.is_valid(valid_test_object, A, 'test_charfield'), True)
+        self.assertEqual(A.test_charfield.is_valid(invalid_test_object, A, 'test_charfield'), False)
 
         self.assertEqual(A.test_charfield.errors(valid_test_object), [])
-        self.assertEqual(A.test_charfield.errors(invalid_test_object), ['CharField len bigger than max_length'])
+        self.assertEqual(A.test_charfield.errors(invalid_test_object), ['test_charfield len bigger than max_length'])
 
     def test_with_2_validators(self):
 
@@ -206,13 +206,13 @@ class CharFieldWithLengthValidatorTestCase(unittest.TestCase):
         invalid_test_object2 = A()
         invalid_test_object2.test_charfield = '123456'
 
-        self.assertEqual(A.test_charfield.is_valid(valid_test_object, A), True)
-        self.assertEqual(A.test_charfield.is_valid(invalid_test_object, A), False)
-        self.assertEqual(A.test_charfield.is_valid(invalid_test_object2, A), False)
+        self.assertEqual(A.test_charfield.is_valid(valid_test_object, A, 'test_charfield'), True)
+        self.assertEqual(A.test_charfield.is_valid(invalid_test_object, A, 'test_charfield'), False)
+        self.assertEqual(A.test_charfield.is_valid(invalid_test_object2, A, 'test_charfield'), False)
 
         self.assertEqual(A.test_charfield.errors(valid_test_object), [])
-        self.assertEqual(A.test_charfield.errors(invalid_test_object), ['CharField len smaller than min_length'])
-        self.assertEqual(A.test_charfield.errors(invalid_test_object2), ['CharField len bigger than max_length'])
+        self.assertEqual(A.test_charfield.errors(invalid_test_object), ['test_charfield len smaller than min_length'])
+        self.assertEqual(A.test_charfield.errors(invalid_test_object2), ['test_charfield len bigger than max_length'])
 
 
 class IntegerFieldGreaterThan(unittest.TestCase):
