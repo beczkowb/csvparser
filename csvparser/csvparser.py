@@ -130,10 +130,18 @@ class CharFieldMinLengthValidator(CharFieldLengthValidator):
                          '{field_name} len smaller than min_length')
 
 
-class IntegerFieldMaxValidator(CompareValidator):
+class IntegerFieldValueValidator(CompareValidator):
+    def apply_operator(self, value):
+        return self.compare_operator(value, self.threshold)
+
+
+class IntegerFieldMaxValidator(IntegerFieldValueValidator):
     def __init__(self, max_value):
         super().__init__(max_value, operator.le,
                          '{field_name} bigger than max')
 
-    def apply_operator(self, value):
-        return self.compare_operator(value, self.threshold)
+
+class IntegerFieldMinValidator(IntegerFieldValueValidator):
+    def __init__(self, min_value):
+        super().__init__(min_value, operator.ge,
+                         '{field_name} bigger than min')

@@ -215,7 +215,7 @@ class CharFieldWithLengthValidatorTestCase(unittest.TestCase):
         self.assertEqual(A.test_charfield.errors(invalid_test_object2), ['test_charfield len bigger than max_length'])
 
 
-class IntegerFieldGreaterThan(unittest.TestCase):
+class IntegerFieldMaxValidator(unittest.TestCase):
     def test(self):
         class A(object):
             test_integerfield = csvparser.IntegerField(
@@ -235,6 +235,28 @@ class IntegerFieldGreaterThan(unittest.TestCase):
 
         self.assertEqual(A.test_integerfield.errors(valid_test_object), [])
         self.assertEqual(A.test_integerfield.errors(invalid_test_object), ['test_integerfield bigger than max'])
+
+
+class IntegerFieldMinValidator(unittest.TestCase):
+    def test(self):
+        class A(object):
+            test_integerfield = csvparser.IntegerField(
+                validators=[
+                    csvparser.IntegerFieldMinValidator(min_value=5),
+                ]
+            )
+
+        valid_test_object = A()
+        valid_test_object.test_integerfield = '30'
+
+        invalid_test_object = A()
+        invalid_test_object.test_integerfield = '1'
+
+        self.assertEqual(A.test_integerfield.is_valid(valid_test_object, A, 'test_integerfield'), True)
+        self.assertEqual(A.test_integerfield.is_valid(invalid_test_object, A, 'test_integerfield'), False)
+
+        self.assertEqual(A.test_integerfield.errors(valid_test_object), [])
+        self.assertEqual(A.test_integerfield.errors(invalid_test_object), ['test_integerfield bigger than min'])
 
 
 
