@@ -121,7 +121,7 @@ class CharFieldLengthValidator(CompareValidator):
 class CharFieldMaxLengthValidator(CharFieldLengthValidator):
     def __init__(self, max_length):
         super().__init__(max_length, operator.le,
-                         '{field_name} len bigger than max_length')
+                         '{field_name} len higher than max_length')
 
 
 class CharFieldMinLengthValidator(CharFieldLengthValidator):
@@ -130,18 +130,36 @@ class CharFieldMinLengthValidator(CharFieldLengthValidator):
                          '{field_name} len smaller than min_length')
 
 
-class IntegerFieldValueValidator(CompareValidator):
+class NumericalFieldValueValidator(CompareValidator):
     def apply_operator(self, value):
         return self.compare_operator(value, self.threshold)
 
 
-class IntegerFieldMaxValidator(IntegerFieldValueValidator):
+class IntegerFieldMaxValidator(NumericalFieldValueValidator):
     def __init__(self, max_value):
         super().__init__(max_value, operator.le,
-                         '{field_name} bigger than max')
+                         '{field_name} higher than max')
 
 
-class IntegerFieldMinValidator(IntegerFieldValueValidator):
+class IntegerFieldMinValidator(NumericalFieldValueValidator):
     def __init__(self, min_value):
         super().__init__(min_value, operator.ge,
-                         '{field_name} bigger than min')
+                         '{field_name} lower than min')
+
+
+class DecimalFieldMaxValidator(NumericalFieldValueValidator):
+    def __init__(self, max_value):
+        if not isinstance(max_value, decimal.Decimal):
+            raise TypeError('max_value on DecimalFieldMaxValidator has to be decimal')
+
+        super().__init__(max_value, operator.le,
+                         '{field_name} higher than max_value')
+
+
+class DecimalFieldMinValidator(NumericalFieldValueValidator):
+    def __init__(self, min_value):
+        if not isinstance(min_value, decimal.Decimal):
+            raise TypeError('min_value on DecimalFieldMinValidator has to be decimal')
+
+        super().__init__(min_value, operator.ge,
+                         '{field_name} lower than min_value')

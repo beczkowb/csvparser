@@ -166,7 +166,7 @@ class CharFieldMaxLengthValidatorTestCase(unittest.TestCase):
         invalid_string = '1234567891011'
         self.assertEqual(validator.is_valid(valid_string, 'test_charfield'), True)
         self.assertEqual(validator.is_valid(invalid_string, 'test_charfield'), False)
-        self.assertEqual(validator.errors, ['test_charfield len bigger than max_length'])
+        self.assertEqual(validator.errors, ['test_charfield len higher than max_length'])
 
 
 class CharFieldWithLengthValidatorTestCase(unittest.TestCase):
@@ -185,7 +185,7 @@ class CharFieldWithLengthValidatorTestCase(unittest.TestCase):
         self.assertEqual(A.test_charfield.is_valid(invalid_test_object, A, 'test_charfield'), False)
 
         self.assertEqual(A.test_charfield.errors(valid_test_object), [])
-        self.assertEqual(A.test_charfield.errors(invalid_test_object), ['test_charfield len bigger than max_length'])
+        self.assertEqual(A.test_charfield.errors(invalid_test_object), ['test_charfield len higher than max_length'])
 
     def test_with_2_validators(self):
 
@@ -212,10 +212,10 @@ class CharFieldWithLengthValidatorTestCase(unittest.TestCase):
 
         self.assertEqual(A.test_charfield.errors(valid_test_object), [])
         self.assertEqual(A.test_charfield.errors(invalid_test_object), ['test_charfield len smaller than min_length'])
-        self.assertEqual(A.test_charfield.errors(invalid_test_object2), ['test_charfield len bigger than max_length'])
+        self.assertEqual(A.test_charfield.errors(invalid_test_object2), ['test_charfield len higher than max_length'])
 
 
-class IntegerFieldMaxValidator(unittest.TestCase):
+class IntegerFieldMaxValidatorTestCase(unittest.TestCase):
     def test(self):
         class A(object):
             test_integerfield = csvparser.IntegerField(
@@ -234,10 +234,10 @@ class IntegerFieldMaxValidator(unittest.TestCase):
         self.assertEqual(A.test_integerfield.is_valid(invalid_test_object, A, 'test_integerfield'), False)
 
         self.assertEqual(A.test_integerfield.errors(valid_test_object), [])
-        self.assertEqual(A.test_integerfield.errors(invalid_test_object), ['test_integerfield bigger than max'])
+        self.assertEqual(A.test_integerfield.errors(invalid_test_object), ['test_integerfield higher than max'])
 
 
-class IntegerFieldMinValidator(unittest.TestCase):
+class IntegerFieldMinValidatorTestCase(unittest.TestCase):
     def test(self):
         class A(object):
             test_integerfield = csvparser.IntegerField(
@@ -256,8 +256,98 @@ class IntegerFieldMinValidator(unittest.TestCase):
         self.assertEqual(A.test_integerfield.is_valid(invalid_test_object, A, 'test_integerfield'), False)
 
         self.assertEqual(A.test_integerfield.errors(valid_test_object), [])
-        self.assertEqual(A.test_integerfield.errors(invalid_test_object), ['test_integerfield bigger than min'])
+        self.assertEqual(A.test_integerfield.errors(invalid_test_object), ['test_integerfield lower than min'])
 
+
+class IntegerFieldMinMaxValidatorsTestCase(unittest.TestCase):
+    def test(self):
+        class A(object):
+            test_integerfield = csvparser.IntegerField(
+                validators=[
+                    csvparser.IntegerFieldMinValidator(min_value=1),
+                    csvparser.IntegerFieldMaxValidator(max_value=5),
+                ]
+            )
+
+        invalid_object1 = A()
+        invalid_object1.test_integerfield = 6
+
+        invalid_object2 = A()
+        invalid_object2.test_integerfield = 0
+
+        valid_object1 = A()
+        valid_object1.test_integerfield = 1
+
+        valid_object2 = A()
+        valid_object2.test_integerfield = 3
+
+        valid_object3 = A()
+        valid_object3.test_integerfield = 5
+
+        self.assertEqual(A.test_integerfield.is_valid(invalid_object1, A, 'test_integerfield'), False)
+        self.assertEqual(A.test_integerfield.errors(invalid_object1), ['test_integerfield higher than max'])
+
+        self.assertEqual(A.test_integerfield.is_valid(invalid_object2, A, 'test_integerfield'), False)
+        self.assertEqual(A.test_integerfield.errors(invalid_object2), ['test_integerfield lower than min'])
+
+        self.assertEqual(A.test_integerfield.is_valid(valid_object1, A, 'test_integerfield'), True)
+        self.assertEqual(A.test_integerfield.errors(valid_object1), [])
+
+        self.assertEqual(A.test_integerfield.is_valid(valid_object2, A, 'test_integerfield'), True)
+        self.assertEqual(A.test_integerfield.errors(valid_object2), [])
+
+        self.assertEqual(A.test_integerfield.is_valid(valid_object3, A, 'test_integerfield'), True)
+        self.assertEqual(A.test_integerfield.errors(valid_object3), [])
+
+
+class DecimalFieldMinValidatorTestCase(unittest.TestCase):
+    def test(self):
+        class A(object):
+            test_decimalfield = csvparser.DecimalField(
+                validators=[
+                    csvparser.DecimalFieldMinValidator(min_value=decimal.Decimal('1.00'))
+                ]
+            )
+
+        valid_test_object = A()
+        valid_test_object.test_decimalfield = decimal.Decimal('1.0')
+
+        invalid_test_object = A()
+        invalid_test_object.test_decimalfield = decimal.Decimal('0.0')
+
+        self.assertEqual(A.test_decimalfield.is_valid(valid_test_object, A, 'test_decimalfield'), True)
+        self.assertEqual(A.test_decimalfield.is_valid(invalid_test_object, A, 'test_decimalfield'), False)
+
+        self.assertEqual(A.test_decimalfield.errors(valid_test_object), [])
+        self.assertEqual(A.test_decimalfield.errors(invalid_test_object), ['test_decimalfield lower than min_value'])
+
+        with self.assertRaises(TypeError) as e:
+            validator = csvparser.DecimalFieldMinValidator(min_value=1.0)
+
+
+class DecimalFieldMaxValidatorTestCase(unittest.TestCase):
+    def test(self):
+        class A(object):
+            test_decimalfield = csvparser.DecimalField(
+                validators=[
+                    csvparser.DecimalFieldMaxValidator(max_value=decimal.Decimal('5.00'))
+                ]
+            )
+
+        valid_test_object = A()
+        valid_test_object.test_decimalfield = decimal.Decimal('1.0')
+
+        invalid_test_object = A()
+        invalid_test_object.test_decimalfield = decimal.Decimal('10.0')
+
+        self.assertEqual(A.test_decimalfield.is_valid(valid_test_object, A, 'test_decimalfield'), True)
+        self.assertEqual(A.test_decimalfield.is_valid(invalid_test_object, A, 'test_decimalfield'), False)
+
+        self.assertEqual(A.test_decimalfield.errors(valid_test_object), [])
+        self.assertEqual(A.test_decimalfield.errors(invalid_test_object), ['test_decimalfield higher than max_value'])
+
+        with self.assertRaises(TypeError) as e:
+            validator = csvparser.DecimalFieldMaxValidator(max_value=1.0)
 
 
 if __name__ == '__main__':
