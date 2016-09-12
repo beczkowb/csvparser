@@ -350,5 +350,38 @@ class DecimalFieldMaxValidatorTestCase(unittest.TestCase):
             validator = csvparser.DecimalFieldMaxValidator(max_value=1.0)
 
 
+class DecimalFieldMinMaxValidatorsTestCase(unittest.TestCase):
+    def test(self):
+        class A(object):
+            test_decimalfield = csvparser.DecimalField(
+                validators=[
+                    csvparser.DecimalFieldMaxValidator(max_value=decimal.Decimal('5.00')),
+                    csvparser.DecimalFieldMinValidator(min_value=decimal.Decimal('1.00')),
+                ]
+            )
+
+        invalid_object = A()
+        invalid_object.test_decimalfield = decimal.Decimal('0.0')
+
+        invalid_object2 = A()
+        invalid_object2.test_decimalfield = decimal.Decimal('20.589')
+
+        valid_object = A()
+        valid_object.test_decimalfield = decimal.Decimal('3.22')
+
+        self.assertEqual(A.test_decimalfield.is_valid(invalid_object, A, 'test_decimalfield'), False)
+        self.assertEqual(A.test_decimalfield.errors(invalid_object), ['test_decimalfield lower than min_value'])
+
+        self.assertEqual(A.test_decimalfield.is_valid(invalid_object2, A, 'test_decimalfield'), False)
+        self.assertEqual(A.test_decimalfield.errors(invalid_object2), ['test_decimalfield higher than max_value'])
+
+        self.assertEqual(A.test_decimalfield.is_valid(valid_object, A, 'test_decimalfield'), True)
+        self.assertEqual(A.test_decimalfield.errors(valid_object), [])
+
+
+
+
+
+
 if __name__ == '__main__':
     unittest.main()
