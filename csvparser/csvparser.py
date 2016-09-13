@@ -4,7 +4,10 @@ import operator
 
 
 class Parser(object):
-    fields_order = None
+    fields_order = []
+
+    def __init__(self):
+        self.errors = None
 
     @classmethod
     def parse_file(cls, file_path, start_from_line=1, end_at_line=None,
@@ -29,6 +32,16 @@ class Parser(object):
     @classmethod
     def get_all_field_names_declared_by_user(cls):
         return cls.fields_order
+
+    def is_valid(self):
+        self.errors = []
+
+        for field in self.get_all_field_names_declared_by_user():
+            field_object = getattr(self, field)
+            field_object.is_valid(self, type(self), field)
+            self.errors.extend(field_object.errors)
+
+        return len(self.errors) == 0
 
 
 class ParserField(object):
