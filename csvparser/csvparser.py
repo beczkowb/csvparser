@@ -4,7 +4,7 @@ import operator
 
 
 class Parser(object):
-    fields_order = []
+    fields_order = None
 
     def __init__(self):
         self.errors = None
@@ -37,9 +37,9 @@ class Parser(object):
         self.errors = []
 
         for field in self.get_all_field_names_declared_by_user():
-            field_object = getattr(self, field)
-            field_object.is_valid(self, type(self), field)
-            self.errors.extend(field_object.errors)
+            getattr(type(self), field).is_valid(self, type(self), field)
+            field_errors = getattr(type(self), field).errors(self)
+            self.errors.extend(field_errors)
 
         return len(self.errors) == 0
 

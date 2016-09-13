@@ -379,9 +379,39 @@ class DecimalFieldMinMaxValidatorsTestCase(unittest.TestCase):
         self.assertEqual(A.test_decimalfield.errors(valid_object), [])
 
 
+class ParserWithValidators(unittest.TestCase):
+    def test(self):
+        class A(csvparser.Parser):
+            test_decimalfield = csvparser.DecimalField(
+                validators=[
+                    csvparser.DecimalFieldMaxValidator(max_value=decimal.Decimal('5.00')),
+                    csvparser.DecimalFieldMinValidator(min_value=decimal.Decimal('1.00')),
+                ]
+            )
+            test_integerfield = csvparser.IntegerField(
+                validators=[
+                    csvparser.IntegerFieldMinValidator(min_value=5),
+                ]
+            )
+            test_charfield = csvparser.CharField(
+                validators=[
+                    csvparser.CharFieldMaxLengthValidator(max_length=5),
+                    csvparser.CharFieldMinLengthValidator(min_length=1)
+                ]
+            )
+            fields_order = ['test_decimalfield', 'test_integerfield', 'test_charfield']
 
+        test_object = A()
+        test_object.test_decimalfield = decimal.Decimal('3.0')
+        test_object.test_integerfield = 6
+        test_object.test_charfield = 'ab'
 
+        self.assertEqual(test_object.is_valid(), True)
+        self.assertEqual(test_object.errors, [])
 
+        test_object.test_charfield = 'abcdefgh'
+        self.assertEqual(test_object.is_valid(), False)
+        self.assertEqual(test_object.errors, ['test_charfield len higher than max_length'])
 
 if __name__ == '__main__':
     unittest.main()
