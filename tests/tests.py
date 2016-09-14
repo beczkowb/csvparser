@@ -413,5 +413,20 @@ class ParserWithValidators(unittest.TestCase):
         self.assertEqual(test_object.is_valid(), False)
         self.assertEqual(test_object.errors, ['test_charfield len higher than max_length'])
 
+        test_object = A()
+        test_object.test_charfield = 'wrong charfield'
+        test_object.test_decimalfield = '99999.2321'
+        test_object.test_integerfield = -1
+
+        self.assertEqual(test_object.is_valid(), False)
+        self.assertEqual(test_object.errors, ['test_decimalfield higher than max_value',
+                                              'test_integerfield lower than min',
+                                              'test_charfield len higher than max_length'])
+
+        test_object.test_integerfield = 50
+        self.assertEqual(test_object.is_valid(), False)
+        self.assertEqual(test_object.errors, ['test_decimalfield higher than max_value',
+                                              'test_charfield len higher than max_length'])
+
 if __name__ == '__main__':
     unittest.main()
