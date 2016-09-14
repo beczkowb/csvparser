@@ -71,15 +71,16 @@ class ParserField(object):
     def is_valid(self, instance, cls, field_name):
         value = self.__get__(instance, cls)
         setattr(instance, self.errors_field_name, [])
-        valid = True
+        validation_results = []
 
         for validator in self.validators:
-            if not validator.is_valid(self.create_real_value(value), field_name):
+            field_is_valid = validator.is_valid(self.create_real_value(value), field_name)
+            if not field_is_valid:
                 current_errors = getattr(instance, self.errors_field_name)
                 current_errors.extend(validator.errors)
-                valid = False
+            validation_results.append(field_is_valid)
 
-        return valid
+        return all(validation_results)
 
     def errors(self, instance):
         return getattr(instance, self.errors_field_name)

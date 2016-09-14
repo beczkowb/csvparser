@@ -399,6 +399,7 @@ class ParserWithValidators(unittest.TestCase):
                     csvparser.CharFieldMinLengthValidator(min_length=1)
                 ]
             )
+
             fields_order = ['test_decimalfield', 'test_integerfield', 'test_charfield']
 
         test_object = A()
@@ -427,6 +428,24 @@ class ParserWithValidators(unittest.TestCase):
         self.assertEqual(test_object.is_valid(), False)
         self.assertEqual(test_object.errors, ['test_decimalfield higher than max_value',
                                               'test_charfield len higher than max_length'])
+
+        class B(csvparser.Parser):
+            test_decimalfield = csvparser.DecimalField()
+            test_integerfield = csvparser.IntegerField(
+                validators=[
+                    csvparser.IntegerFieldMinValidator(min_value=5),
+                ]
+            )
+
+            fields_order = ['test_decimalfield', 'test_integerfield']
+
+        test_object2 = B()
+        test_object2.test_decimalfield = decimal.Decimal('28.11')
+        test_object2.test_integerfield = 1
+        self.assertEqual(test_object2.is_valid(), False)
+        self.assertEqual(test_object2.errors, ['test_integerfield lower than min'])
+
+
 
 if __name__ == '__main__':
     unittest.main()
