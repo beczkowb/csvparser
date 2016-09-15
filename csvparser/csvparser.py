@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import csv
 import decimal
 import operator
@@ -134,14 +137,14 @@ class CharFieldLengthValidator(CompareValidator):
 
 class CharFieldMaxLengthValidator(CharFieldLengthValidator):
     def __init__(self, max_length):
-        super().__init__(max_length, operator.le,
-                         '{field_name} len higher than max_length')
+        super(CharFieldMaxLengthValidator, self).__init__(max_length, operator.le,
+                                                          '{field_name} len higher than max_length')
 
 
 class CharFieldMinLengthValidator(CharFieldLengthValidator):
     def __init__(self, min_length):
-        super().__init__(min_length, operator.ge,
-                         '{field_name} len smaller than min_length')
+        super(CharFieldMinLengthValidator, self).__init__(min_length, operator.ge,
+                                                          '{field_name} len smaller than min_length')
 
 
 class NumericalFieldValueValidator(CompareValidator):
@@ -151,14 +154,14 @@ class NumericalFieldValueValidator(CompareValidator):
 
 class IntegerFieldMaxValidator(NumericalFieldValueValidator):
     def __init__(self, max_value):
-        super().__init__(max_value, operator.le,
-                         '{field_name} higher than max')
+        super(IntegerFieldMaxValidator, self).__init__(max_value, operator.le,
+                                                       '{field_name} higher than max')
 
 
 class IntegerFieldMinValidator(NumericalFieldValueValidator):
     def __init__(self, min_value):
-        super().__init__(min_value, operator.ge,
-                         '{field_name} lower than min')
+        super(IntegerFieldMinValidator, self).__init__(min_value, operator.ge,
+                                                       '{field_name} lower than min')
 
 
 class DecimalFieldMaxValidator(NumericalFieldValueValidator):
@@ -166,8 +169,8 @@ class DecimalFieldMaxValidator(NumericalFieldValueValidator):
         if not isinstance(max_value, decimal.Decimal):
             raise TypeError('max_value on DecimalFieldMaxValidator has to be decimal')
 
-        super().__init__(max_value, operator.le,
-                         '{field_name} higher than max_value')
+        super(DecimalFieldMaxValidator, self).__init__(max_value, operator.le,
+                                                       '{field_name} higher than max_value')
 
 
 class DecimalFieldMinValidator(NumericalFieldValueValidator):
@@ -175,5 +178,5 @@ class DecimalFieldMinValidator(NumericalFieldValueValidator):
         if not isinstance(min_value, decimal.Decimal):
             raise TypeError('min_value on DecimalFieldMinValidator has to be decimal')
 
-        super().__init__(min_value, operator.ge,
-                         '{field_name} lower than min_value')
+        super(DecimalFieldMinValidator, self).__init__(min_value, operator.ge,
+                                                       '{field_name} lower than min_value')

@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import unittest
 import decimal
 import os
@@ -58,7 +61,7 @@ class ParserTestCase(unittest.TestCase):
     def test_custom_reader(self):
         rows = AdPerformanceReportParser.parse_file(
             file_path=self.simple_test_file_path,
-            csv_reader=csv.reader, dialect='unix'
+            csv_reader=csv.reader, dialect='excel'
         )
         rows = list(rows)
         row1, row2 = rows
@@ -141,7 +144,7 @@ class ParserTestCase(unittest.TestCase):
             file_path=self.simple_test_file_with_headers_and_summary_path_and_custom_reader,
             start_from_line=2,
             end_at_line=3,
-            csv_reader=csv.reader, delimiter=';', quotechar='|'
+            csv_reader=csv.reader, delimiter=str(';'), quotechar=str('|')
         )
         rows = list(rows)
         row1, row2 = rows
@@ -444,7 +447,6 @@ class ParserWithValidators(unittest.TestCase):
         test_object2.test_integerfield = 1
         self.assertEqual(test_object2.is_valid(), False)
         self.assertEqual(test_object2.errors, ['test_integerfield lower than min'])
-
 
 
 if __name__ == '__main__':
