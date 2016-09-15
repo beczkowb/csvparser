@@ -5,7 +5,7 @@ It uses standard csv package. Tested on python 2.7 and 3.4.
 # Installation
 `pip install csvparser`
 
-# Usage
+# Basic usage
 Lets say that you want parse csv like below. We want to skip first row(header) and last(summary):
 
 ```
@@ -72,3 +72,49 @@ for row in rows_as_objects:
     else:
         pass  # do something else
 ```
+
+# Extending basic functionality
+
+## Creating custom fields
+
+You can create custom parser field. Lets say that you want to parse csv showed below:
+```
+impressions,clicks,conversions,cost,ad_id,ad_image
+1000,200,5,50000.03,1232188,300x200_somefilename.jpg
+56000,3224,900,202000.44,8324125,150x100_somefilename2.jpg
+57000,3424,905,252000.47,--,--
+```
+
+There is additional column `ad_image` which you want to parse to tuple of 3 strings (width, height, name)
+To do this we have to create new parser field:
+```python
+import csvparser
+
+class AdImageField(csvparser.ParserField):
+    @staticmethod
+    def create_real_value(raw_value):  # raw_value = 300x200_somefilename.jpg
+        size, name_and_format = raw_value.split('_')
+        width, height = size.split('x')
+        return width, height, name
+```
+
+As you can see, your custom field `AdImageField` have to inherit from `csvparser.ParserField`,
+and declare staticmethod `create_real_value` which return parsed string.
+
+Now, you can use your new field:
+```python
+import csvparser
+
+class AdPerformanceReportParser(csvparser.Parser):
+    impressions = csvparser.IntegerField()
+    clicks = csvparser.IntegerField()
+    conversions = csvparser.IntegerField()
+    cost = csvparser.DecimalField()
+    ad_id = csvparser.CharField()
+    ad_image = AdImageField()
+    
+    fields_order = ['impressions', 'clicks', 'conversions', 'cost', 'ad_id', 'ad_image']
+```
+
+## Creating custom validators
+There is no easy way to create custom validators yet. There will be in next version.
