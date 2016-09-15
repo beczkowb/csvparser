@@ -449,5 +449,33 @@ class ParserWithValidators(unittest.TestCase):
         self.assertEqual(test_object2.errors, ['test_integerfield lower than min'])
 
 
+class ParserWithCustomValidatorTestCase(unittest.TestCase):
+    def test(self):
+        class AdImageField(csvparser.ParserField):
+            @staticmethod
+            def create_real_value(raw_value):
+                size, name_and_format = raw_value.split('_')
+                width, height = size.split('x')
+                name, format = name_and_format.split('.')
+                return width, height, name
+
+        class AdPerformanceReportParser(csvparser.Parser):
+            impressions = csvparser.IntegerField()
+            clicks = csvparser.IntegerField()
+            conversions = csvparser.IntegerField()
+            cost = csvparser.DecimalField()
+            ad_id = csvparser.CharField()
+            ad_image = AdImageField()
+
+            fields_order = ['impressions', 'clicks', 'conversions', 'cost', 'ad_id', 'ad_image']
+
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                            'test_files', 'adperformancereport_with_headers_summary_and_additional_column.csv')
+
+        rows_as_objects = list(AdPerformanceReportParser.parse_file(path, start_from_line=2, end_at_line=3))
+        self.assertEqual(rows_as_objects[0].ad_image, ('300', '200', 'somefilename'))
+
+
+
 if __name__ == '__main__':
     unittest.main()

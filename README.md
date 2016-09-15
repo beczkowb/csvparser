@@ -18,7 +18,7 @@ impressions,clicks,conversions,cost,ad_id
 Firstly declare proper class:
 
 ```python
-import csvparser
+from csvparser import csvparser
 
 class AdPerformanceReportParser(csvparser.Parser):
     impressions = csvparser.IntegerField()
@@ -47,7 +47,7 @@ rows_as_objects = AdPerformanceReportParser.parse_file('/some/path/to/file', sta
 
 Parser fields supports validation:
 ```python
-import csvparser
+from csvparser import csvparser
 
 class AdPerformanceReportParser(csvparser.Parser):
     impressions = csvparser.IntegerField(validators=[csvparser.IntegerFieldMinValidator(min_value=0)])
@@ -88,13 +88,14 @@ impressions,clicks,conversions,cost,ad_id,ad_image
 There is additional column `ad_image` which you want to parse to tuple of 3 strings (width, height, name)
 To do this we have to create new parser field:
 ```python
-import csvparser
+from csvparser import csvparser
 
 class AdImageField(csvparser.ParserField):
     @staticmethod
-    def create_real_value(raw_value):  # raw_value = 300x200_somefilename.jpg
+    def create_real_value(raw_value):
         size, name_and_format = raw_value.split('_')
         width, height = size.split('x')
+        name, format = name_and_format.split('.')
         return width, height, name
 ```
 
@@ -103,8 +104,6 @@ and declare staticmethod `create_real_value` which return parsed string.
 
 Now, you can use your new field:
 ```python
-import csvparser
-
 class AdPerformanceReportParser(csvparser.Parser):
     impressions = csvparser.IntegerField()
     clicks = csvparser.IntegerField()
