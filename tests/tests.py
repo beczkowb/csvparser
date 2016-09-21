@@ -452,7 +452,7 @@ class ParserWithValidators(unittest.TestCase):
 
 class ParserWithCustomValidatorTestCase(unittest.TestCase):
     def test(self):
-        class AdImageField(csvparser.ParserField):
+        class AdImageField(fields.ParserField):
             @staticmethod
             def create_real_value(raw_value):
                 size, name_and_format = raw_value.split('_')
@@ -475,7 +475,6 @@ class ParserWithCustomValidatorTestCase(unittest.TestCase):
 
         rows_as_objects = list(AdPerformanceReportParser.parse_file(path, start_from_line=2, end_at_line=3))
         self.assertEqual(rows_as_objects[0].ad_image, ('300', '200', 'somefilename'))
-
 
 
 if __name__ == '__main__':
