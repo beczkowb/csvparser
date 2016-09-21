@@ -6,6 +6,7 @@ import decimal
 import os
 import csv
 from csvparser import csvparser
+from csvparser import fields
 
 
 class AdPerformanceReportParser(csvparser.Parser):
@@ -13,7 +14,7 @@ class AdPerformanceReportParser(csvparser.Parser):
     clicks = csvparser.IntegerField()
     conversions = csvparser.IntegerField()
     cost = csvparser.DecimalField()
-    ad_id = csvparser.CharField()
+    ad_id = fields.CharField()
 
     fields_order = ['impressions', 'clicks', 'conversions',
                     'cost', 'ad_id']
@@ -176,7 +177,7 @@ class CharFieldWithLengthValidatorTestCase(unittest.TestCase):
     def test(self):
 
         class A(object):
-            test_charfield = csvparser.CharField(validators=[csvparser.CharFieldMaxLengthValidator(max_length=5)])
+            test_charfield = fields.CharField(validators=[csvparser.CharFieldMaxLengthValidator(max_length=5)])
 
         valid_test_object = A()
         valid_test_object.test_charfield = '1234'
@@ -193,7 +194,7 @@ class CharFieldWithLengthValidatorTestCase(unittest.TestCase):
     def test_with_2_validators(self):
 
         class A(object):
-            test_charfield = csvparser.CharField(
+            test_charfield = fields.CharField(
                 validators=[
                     csvparser.CharFieldMaxLengthValidator(max_length=5),
                     csvparser.CharFieldMinLengthValidator(min_length=1)
@@ -396,7 +397,7 @@ class ParserWithValidators(unittest.TestCase):
                     csvparser.IntegerFieldMinValidator(min_value=5),
                 ]
             )
-            test_charfield = csvparser.CharField(
+            test_charfield = fields.CharField(
                 validators=[
                     csvparser.CharFieldMaxLengthValidator(max_length=5),
                     csvparser.CharFieldMinLengthValidator(min_length=1)
@@ -464,7 +465,7 @@ class ParserWithCustomValidatorTestCase(unittest.TestCase):
             clicks = csvparser.IntegerField()
             conversions = csvparser.IntegerField()
             cost = csvparser.DecimalField()
-            ad_id = csvparser.CharField()
+            ad_id = fields.CharField()
             ad_image = AdImageField()
 
             fields_order = ['impressions', 'clicks', 'conversions', 'cost', 'ad_id', 'ad_image']
