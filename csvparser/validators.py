@@ -15,3 +15,8 @@ class CompareValidator(object):
 
     def apply_operator(self, value):
         pass
+
+
+class CharFieldLengthValidator(CompareValidator):
+    def apply_operator(self, value):
+        return self.compare_operator(len(value), self.threshold)
