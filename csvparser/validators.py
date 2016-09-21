@@ -46,3 +46,9 @@ class IntegerFieldMaxValidator(NumericalFieldValueValidator):
     def __init__(self, max_value):
         super(IntegerFieldMaxValidator, self).__init__(max_value, operator.le,
                                                        '{field_name} higher than max')
+
+
+class IntegerFieldMinValidator(NumericalFieldValueValidator):
+    def __init__(self, min_value):
+        super(IntegerFieldMinValidator, self).__init__(min_value, operator.ge,
+                                                       '{field_name} lower than min')

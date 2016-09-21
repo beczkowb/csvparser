@@ -48,12 +48,6 @@ class Parser(object):
         return len(self.errors) == 0
 
 
-class IntegerFieldMinValidator(validators.NumericalFieldValueValidator):
-    def __init__(self, min_value):
-        super(IntegerFieldMinValidator, self).__init__(min_value, operator.ge,
-                                                       '{field_name} lower than min')
-
-
 class DecimalFieldMaxValidator(validators.NumericalFieldValueValidator):
     def __init__(self, max_value):
         if not isinstance(max_value, decimal.Decimal):
