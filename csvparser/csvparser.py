@@ -48,24 +48,19 @@ class Parser(object):
         return len(self.errors) == 0
 
 
-class NumericalFieldValueValidator(validators.CompareValidator):
-    def apply_operator(self, value):
-        return self.compare_operator(value, self.threshold)
-
-
-class IntegerFieldMaxValidator(NumericalFieldValueValidator):
+class IntegerFieldMaxValidator(validators.NumericalFieldValueValidator):
     def __init__(self, max_value):
         super(IntegerFieldMaxValidator, self).__init__(max_value, operator.le,
                                                        '{field_name} higher than max')
 
 
-class IntegerFieldMinValidator(NumericalFieldValueValidator):
+class IntegerFieldMinValidator(validators.NumericalFieldValueValidator):
     def __init__(self, min_value):
         super(IntegerFieldMinValidator, self).__init__(min_value, operator.ge,
                                                        '{field_name} lower than min')
 
 
-class DecimalFieldMaxValidator(NumericalFieldValueValidator):
+class DecimalFieldMaxValidator(validators.NumericalFieldValueValidator):
     def __init__(self, max_value):
         if not isinstance(max_value, decimal.Decimal):
             raise TypeError('max_value on DecimalFieldMaxValidator has to be decimal')
@@ -74,7 +69,7 @@ class DecimalFieldMaxValidator(NumericalFieldValueValidator):
                                                        '{field_name} higher than max_value')
 
 
-class DecimalFieldMinValidator(NumericalFieldValueValidator):
+class DecimalFieldMinValidator(validators.NumericalFieldValueValidator):
     def __init__(self, min_value):
         if not isinstance(min_value, decimal.Decimal):
             raise TypeError('min_value on DecimalFieldMinValidator has to be decimal')

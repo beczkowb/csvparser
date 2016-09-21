@@ -35,3 +35,8 @@ class CharFieldMinLengthValidator(CharFieldLengthValidator):
     def __init__(self, min_length):
         super(CharFieldMinLengthValidator, self).__init__(min_length, operator.ge,
                                                           '{field_name} len smaller than min_length')
+
+
+class NumericalFieldValueValidator(CompareValidator):
+    def apply_operator(self, value):
+        return self.compare_operator(value, self.threshold)
