@@ -99,12 +99,6 @@ class IntegerField(ParserField):
         return int(raw_value)
 
 
-class DecimalField(ParserField):
-    @staticmethod
-    def create_real_value(raw_value):
-        return decimal.Decimal(raw_value)
-
-
 class CompareValidator(object):
     def __init__(self, threshold, compare_operator, error_message_template):
         self.threshold = threshold
