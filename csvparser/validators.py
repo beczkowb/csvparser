@@ -62,3 +62,12 @@ class DecimalFieldMaxValidator(NumericalFieldValueValidator):
 
         super(DecimalFieldMaxValidator, self).__init__(max_value, operator.le,
                                                        '{field_name} higher than max_value')
+
+
+class DecimalFieldMinValidator(NumericalFieldValueValidator):
+    def __init__(self, min_value):
+        if not isinstance(min_value, decimal.Decimal):
+            raise TypeError('min_value on DecimalFieldMinValidator has to be decimal')
+
+        super(DecimalFieldMinValidator, self).__init__(min_value, operator.ge,
+                                                       '{field_name} lower than min_value')

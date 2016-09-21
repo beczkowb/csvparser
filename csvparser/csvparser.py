@@ -46,12 +46,3 @@ class Parser(object):
             self.errors.extend(field_errors)
 
         return len(self.errors) == 0
-
-
-class DecimalFieldMinValidator(validators.NumericalFieldValueValidator):
-    def __init__(self, min_value):
-        if not isinstance(min_value, decimal.Decimal):
-            raise TypeError('min_value on DecimalFieldMinValidator has to be decimal')
-
-        super(DecimalFieldMinValidator, self).__init__(min_value, operator.ge,
-                                                       '{field_name} lower than min_value')

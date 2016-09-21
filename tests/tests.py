@@ -310,7 +310,7 @@ class DecimalFieldMinValidatorTestCase(unittest.TestCase):
         class A(object):
             test_decimalfield = fields.DecimalField(
                 validators=[
-                    csvparser.DecimalFieldMinValidator(min_value=decimal.Decimal('1.00'))
+                    validators.DecimalFieldMinValidator(min_value=decimal.Decimal('1.00'))
                 ]
             )
 
@@ -327,7 +327,7 @@ class DecimalFieldMinValidatorTestCase(unittest.TestCase):
         self.assertEqual(A.test_decimalfield.errors(invalid_test_object), ['test_decimalfield lower than min_value'])
 
         with self.assertRaises(TypeError) as e:
-            validator = csvparser.DecimalFieldMinValidator(min_value=1.0)
+            validator = validators.DecimalFieldMinValidator(min_value=1.0)
 
 
 class DecimalFieldMaxValidatorTestCase(unittest.TestCase):
@@ -361,7 +361,7 @@ class DecimalFieldMinMaxValidatorsTestCase(unittest.TestCase):
             test_decimalfield = fields.DecimalField(
                 validators=[
                     validators.DecimalFieldMaxValidator(max_value=decimal.Decimal('5.00')),
-                    csvparser.DecimalFieldMinValidator(min_value=decimal.Decimal('1.00')),
+                    validators.DecimalFieldMinValidator(min_value=decimal.Decimal('1.00')),
                 ]
             )
 
@@ -390,7 +390,7 @@ class ParserWithValidators(unittest.TestCase):
             test_decimalfield = fields.DecimalField(
                 validators=[
                     validators.DecimalFieldMaxValidator(max_value=decimal.Decimal('5.00')),
-                    csvparser.DecimalFieldMinValidator(min_value=decimal.Decimal('1.00')),
+                    validators.DecimalFieldMinValidator(min_value=decimal.Decimal('1.00')),
                 ]
             )
             test_integerfield = fields.IntegerField(
