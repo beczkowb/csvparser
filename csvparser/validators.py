@@ -40,3 +40,9 @@ class CharFieldMinLengthValidator(CharFieldLengthValidator):
 class NumericalFieldValueValidator(CompareValidator):
     def apply_operator(self, value):
         return self.compare_operator(value, self.threshold)
+
+
+class IntegerFieldMaxValidator(NumericalFieldValueValidator):
+    def __init__(self, max_value):
+        super(IntegerFieldMaxValidator, self).__init__(max_value, operator.le,
+                                                       '{field_name} higher than max')

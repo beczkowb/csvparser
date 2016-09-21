@@ -224,7 +224,7 @@ class IntegerFieldMaxValidatorTestCase(unittest.TestCase):
         class A(object):
             test_integerfield = fields.IntegerField(
                 validators=[
-                    csvparser.IntegerFieldMaxValidator(max_value=5),
+                    validators.IntegerFieldMaxValidator(max_value=5),
                 ]
             )
 
@@ -269,7 +269,7 @@ class IntegerFieldMinMaxValidatorsTestCase(unittest.TestCase):
             test_integerfield = fields.IntegerField(
                 validators=[
                     csvparser.IntegerFieldMinValidator(min_value=1),
-                    csvparser.IntegerFieldMaxValidator(max_value=5),
+                    validators.IntegerFieldMaxValidator(max_value=5),
                 ]
             )
 
