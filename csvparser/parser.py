@@ -32,6 +32,9 @@ class Parser(object):
 
     @classmethod
     def get_all_field_names_declared_by_user(cls):
+        if cls.fields_order is None:
+            raise RuntimeError('You have to specify fields_order')
+
         return cls.fields_order
 
     def is_valid(self):
