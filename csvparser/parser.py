@@ -2,9 +2,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import csv
-import decimal
-import operator
-from . import validators
 
 
 class Parser(object):

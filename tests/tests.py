@@ -5,12 +5,12 @@ import unittest
 import decimal
 import os
 import csv
-from csvparser import csvparser
+from csvparser import parser
 from csvparser import fields
 from csvparser import validators
 
 
-class AdPerformanceReportParser(csvparser.Parser):
+class AdPerformanceReportParser(parser.Parser):
     impressions = fields.IntegerField()
     clicks = fields.IntegerField()
     conversions = fields.IntegerField()
@@ -386,7 +386,7 @@ class DecimalFieldMinMaxValidatorsTestCase(unittest.TestCase):
 
 class ParserWithValidators(unittest.TestCase):
     def test(self):
-        class A(csvparser.Parser):
+        class A(parser.Parser):
             test_decimalfield = fields.DecimalField(
                 validators=[
                     validators.DecimalFieldMaxValidator(max_value=decimal.Decimal('5.00')),
@@ -434,7 +434,7 @@ class ParserWithValidators(unittest.TestCase):
         self.assertEqual(test_object.errors, ['test_decimalfield higher than max_value',
                                               'test_charfield len higher than max_length'])
 
-        class B(csvparser.Parser):
+        class B(parser.Parser):
             test_decimalfield = fields.DecimalField()
             test_integerfield = fields.IntegerField(
                 validators=[
@@ -461,7 +461,7 @@ class ParserWithCustomValidatorTestCase(unittest.TestCase):
                 name, format = name_and_format.split('.')
                 return width, height, name
 
-        class AdPerformanceReportParser(csvparser.Parser):
+        class AdPerformanceReportParser(parser.Parser):
             impressions = fields.IntegerField()
             clicks = fields.IntegerField()
             conversions = fields.IntegerField()
