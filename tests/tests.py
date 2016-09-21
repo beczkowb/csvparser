@@ -10,9 +10,9 @@ from csvparser import fields
 
 
 class AdPerformanceReportParser(csvparser.Parser):
-    impressions = csvparser.IntegerField()
-    clicks = csvparser.IntegerField()
-    conversions = csvparser.IntegerField()
+    impressions = fields.IntegerField()
+    clicks = fields.IntegerField()
+    conversions = fields.IntegerField()
     cost = fields.DecimalField()
     ad_id = fields.CharField()
 
@@ -222,7 +222,7 @@ class CharFieldWithLengthValidatorTestCase(unittest.TestCase):
 class IntegerFieldMaxValidatorTestCase(unittest.TestCase):
     def test(self):
         class A(object):
-            test_integerfield = csvparser.IntegerField(
+            test_integerfield = fields.IntegerField(
                 validators=[
                     csvparser.IntegerFieldMaxValidator(max_value=5),
                 ]
@@ -244,7 +244,7 @@ class IntegerFieldMaxValidatorTestCase(unittest.TestCase):
 class IntegerFieldMinValidatorTestCase(unittest.TestCase):
     def test(self):
         class A(object):
-            test_integerfield = csvparser.IntegerField(
+            test_integerfield = fields.IntegerField(
                 validators=[
                     csvparser.IntegerFieldMinValidator(min_value=5),
                 ]
@@ -266,7 +266,7 @@ class IntegerFieldMinValidatorTestCase(unittest.TestCase):
 class IntegerFieldMinMaxValidatorsTestCase(unittest.TestCase):
     def test(self):
         class A(object):
-            test_integerfield = csvparser.IntegerField(
+            test_integerfield = fields.IntegerField(
                 validators=[
                     csvparser.IntegerFieldMinValidator(min_value=1),
                     csvparser.IntegerFieldMaxValidator(max_value=5),
@@ -392,7 +392,7 @@ class ParserWithValidators(unittest.TestCase):
                     csvparser.DecimalFieldMinValidator(min_value=decimal.Decimal('1.00')),
                 ]
             )
-            test_integerfield = csvparser.IntegerField(
+            test_integerfield = fields.IntegerField(
                 validators=[
                     csvparser.IntegerFieldMinValidator(min_value=5),
                 ]
@@ -435,7 +435,7 @@ class ParserWithValidators(unittest.TestCase):
 
         class B(csvparser.Parser):
             test_decimalfield = fields.DecimalField()
-            test_integerfield = csvparser.IntegerField(
+            test_integerfield = fields.IntegerField(
                 validators=[
                     csvparser.IntegerFieldMinValidator(min_value=5),
                 ]
@@ -461,9 +461,9 @@ class ParserWithCustomValidatorTestCase(unittest.TestCase):
                 return width, height, name
 
         class AdPerformanceReportParser(csvparser.Parser):
-            impressions = csvparser.IntegerField()
-            clicks = csvparser.IntegerField()
-            conversions = csvparser.IntegerField()
+            impressions = fields.IntegerField()
+            clicks = fields.IntegerField()
+            conversions = fields.IntegerField()
             cost = fields.DecimalField()
             ad_id = fields.CharField()
             ad_image = AdImageField()

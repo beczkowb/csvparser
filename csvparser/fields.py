@@ -12,3 +12,9 @@ class DecimalField(ParserField):
     @staticmethod
     def create_real_value(raw_value):
         return decimal.Decimal(raw_value)
+
+
+class IntegerField(ParserField):
+    @staticmethod
+    def create_real_value(raw_value):
+        return int(raw_value)
