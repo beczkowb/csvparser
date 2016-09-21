@@ -335,7 +335,7 @@ class DecimalFieldMaxValidatorTestCase(unittest.TestCase):
         class A(object):
             test_decimalfield = fields.DecimalField(
                 validators=[
-                    csvparser.DecimalFieldMaxValidator(max_value=decimal.Decimal('5.00'))
+                    validators.DecimalFieldMaxValidator(max_value=decimal.Decimal('5.00'))
                 ]
             )
 
@@ -352,7 +352,7 @@ class DecimalFieldMaxValidatorTestCase(unittest.TestCase):
         self.assertEqual(A.test_decimalfield.errors(invalid_test_object), ['test_decimalfield higher than max_value'])
 
         with self.assertRaises(TypeError) as e:
-            validator = csvparser.DecimalFieldMaxValidator(max_value=1.0)
+            validator = validators.DecimalFieldMaxValidator(max_value=1.0)
 
 
 class DecimalFieldMinMaxValidatorsTestCase(unittest.TestCase):
@@ -360,7 +360,7 @@ class DecimalFieldMinMaxValidatorsTestCase(unittest.TestCase):
         class A(object):
             test_decimalfield = fields.DecimalField(
                 validators=[
-                    csvparser.DecimalFieldMaxValidator(max_value=decimal.Decimal('5.00')),
+                    validators.DecimalFieldMaxValidator(max_value=decimal.Decimal('5.00')),
                     csvparser.DecimalFieldMinValidator(min_value=decimal.Decimal('1.00')),
                 ]
             )
@@ -389,7 +389,7 @@ class ParserWithValidators(unittest.TestCase):
         class A(csvparser.Parser):
             test_decimalfield = fields.DecimalField(
                 validators=[
-                    csvparser.DecimalFieldMaxValidator(max_value=decimal.Decimal('5.00')),
+                    validators.DecimalFieldMaxValidator(max_value=decimal.Decimal('5.00')),
                     csvparser.DecimalFieldMinValidator(min_value=decimal.Decimal('1.00')),
                 ]
             )

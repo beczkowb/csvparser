@@ -1,4 +1,5 @@
 import operator
+import decimal
 
 
 class CompareValidator(object):
@@ -52,3 +53,12 @@ class IntegerFieldMinValidator(NumericalFieldValueValidator):
     def __init__(self, min_value):
         super(IntegerFieldMinValidator, self).__init__(min_value, operator.ge,
                                                        '{field_name} lower than min')
+
+
+class DecimalFieldMaxValidator(NumericalFieldValueValidator):
+    def __init__(self, max_value):
+        if not isinstance(max_value, decimal.Decimal):
+            raise TypeError('max_value on DecimalFieldMaxValidator has to be decimal')
+
+        super(DecimalFieldMaxValidator, self).__init__(max_value, operator.le,
+                                                       '{field_name} higher than max_value')

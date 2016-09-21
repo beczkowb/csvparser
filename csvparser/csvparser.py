@@ -48,15 +48,6 @@ class Parser(object):
         return len(self.errors) == 0
 
 
-class DecimalFieldMaxValidator(validators.NumericalFieldValueValidator):
-    def __init__(self, max_value):
-        if not isinstance(max_value, decimal.Decimal):
-            raise TypeError('max_value on DecimalFieldMaxValidator has to be decimal')
-
-        super(DecimalFieldMaxValidator, self).__init__(max_value, operator.le,
-                                                       '{field_name} higher than max_value')
-
-
 class DecimalFieldMinValidator(validators.NumericalFieldValueValidator):
     def __init__(self, min_value):
         if not isinstance(min_value, decimal.Decimal):
