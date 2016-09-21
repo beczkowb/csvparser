@@ -7,7 +7,7 @@ import os
 import csv
 from csvparser import csvparser
 from csvparser import fields
-
+from csvparser import validators
 
 class AdPerformanceReportParser(csvparser.Parser):
     impressions = fields.IntegerField()
@@ -165,7 +165,7 @@ class ParserTestCase(unittest.TestCase):
 
 class CharFieldMaxLengthValidatorTestCase(unittest.TestCase):
     def test(self):
-        validator = csvparser.CharFieldMaxLengthValidator(max_length=10)
+        validator = validators.CharFieldMaxLengthValidator(max_length=10)
         valid_string = '12345'
         invalid_string = '1234567891011'
         self.assertEqual(validator.is_valid(valid_string, 'test_charfield'), True)
@@ -177,7 +177,7 @@ class CharFieldWithLengthValidatorTestCase(unittest.TestCase):
     def test(self):
 
         class A(object):
-            test_charfield = fields.CharField(validators=[csvparser.CharFieldMaxLengthValidator(max_length=5)])
+            test_charfield = fields.CharField(validators=[validators.CharFieldMaxLengthValidator(max_length=5)])
 
         valid_test_object = A()
         valid_test_object.test_charfield = '1234'
@@ -196,7 +196,7 @@ class CharFieldWithLengthValidatorTestCase(unittest.TestCase):
         class A(object):
             test_charfield = fields.CharField(
                 validators=[
-                    csvparser.CharFieldMaxLengthValidator(max_length=5),
+                    validators.CharFieldMaxLengthValidator(max_length=5),
                     csvparser.CharFieldMinLengthValidator(min_length=1)
                 ]
             )
@@ -399,7 +399,7 @@ class ParserWithValidators(unittest.TestCase):
             )
             test_charfield = fields.CharField(
                 validators=[
-                    csvparser.CharFieldMaxLengthValidator(max_length=5),
+                    validators.CharFieldMaxLengthValidator(max_length=5),
                     csvparser.CharFieldMinLengthValidator(min_length=1)
                 ]
             )
