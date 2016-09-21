@@ -29,3 +29,9 @@ class CharFieldMaxLengthValidator(CharFieldLengthValidator):
     def __init__(self, max_length):
         super(CharFieldMaxLengthValidator, self).__init__(max_length, operator.le,
                                                           '{field_name} len higher than max_length')
+
+
+class CharFieldMinLengthValidator(CharFieldLengthValidator):
+    def __init__(self, min_length):
+        super(CharFieldMinLengthValidator, self).__init__(min_length, operator.ge,
+                                                          '{field_name} len smaller than min_length')

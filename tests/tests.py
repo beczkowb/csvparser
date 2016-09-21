@@ -197,7 +197,7 @@ class CharFieldWithLengthValidatorTestCase(unittest.TestCase):
             test_charfield = fields.CharField(
                 validators=[
                     validators.CharFieldMaxLengthValidator(max_length=5),
-                    csvparser.CharFieldMinLengthValidator(min_length=1)
+                    validators.CharFieldMinLengthValidator(min_length=1)
                 ]
             )
 
@@ -400,7 +400,7 @@ class ParserWithValidators(unittest.TestCase):
             test_charfield = fields.CharField(
                 validators=[
                     validators.CharFieldMaxLengthValidator(max_length=5),
-                    csvparser.CharFieldMinLengthValidator(min_length=1)
+                    validators.CharFieldMinLengthValidator(min_length=1)
                 ]
             )
 
