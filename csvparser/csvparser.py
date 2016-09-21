@@ -4,6 +4,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import csv
 import decimal
 import operator
+from . import validators
 
 
 class Parser(object):
@@ -47,26 +48,7 @@ class Parser(object):
         return len(self.errors) == 0
 
 
-class CompareValidator(object):
-    def __init__(self, threshold, compare_operator, error_message_template):
-        self.threshold = threshold
-        self.errors = []
-        self.compare_operator = compare_operator
-        self.error_message_template = error_message_template
-
-    def is_valid(self, validated_object, field_name):
-        object_is_valid = self.apply_operator(validated_object)
-        if object_is_valid:
-            return True
-        else:
-            self.errors = [self.error_message_template.format(field_name=field_name)]
-            return False
-
-    def apply_operator(self, value):
-        pass
-
-
-class CharFieldLengthValidator(CompareValidator):
+class CharFieldLengthValidator(validators.CompareValidator):
     def apply_operator(self, value):
         return self.compare_operator(len(value), self.threshold)
 
@@ -83,7 +65,7 @@ class CharFieldMinLengthValidator(CharFieldLengthValidator):
                                                           '{field_name} len smaller than min_length')
 
 
-class NumericalFieldValueValidator(CompareValidator):
+class NumericalFieldValueValidator(validators.CompareValidator):
     def apply_operator(self, value):
         return self.compare_operator(value, self.threshold)
 
