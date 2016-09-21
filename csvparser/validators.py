@@ -1,3 +1,6 @@
+import operator
+
+
 class CompareValidator(object):
     def __init__(self, threshold, compare_operator, error_message_template):
         self.threshold = threshold
@@ -20,3 +23,9 @@ class CompareValidator(object):
 class CharFieldLengthValidator(CompareValidator):
     def apply_operator(self, value):
         return self.compare_operator(len(value), self.threshold)
+
+
+class CharFieldMaxLengthValidator(CharFieldLengthValidator):
+    def __init__(self, max_length):
+        super(CharFieldMaxLengthValidator, self).__init__(max_length, operator.le,
+                                                          '{field_name} len higher than max_length')

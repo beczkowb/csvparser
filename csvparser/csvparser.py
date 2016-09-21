@@ -48,12 +48,6 @@ class Parser(object):
         return len(self.errors) == 0
 
 
-class CharFieldMaxLengthValidator(validators.CharFieldLengthValidator):
-    def __init__(self, max_length):
-        super(CharFieldMaxLengthValidator, self).__init__(max_length, operator.le,
-                                                          '{field_name} len higher than max_length')
-
-
 class CharFieldMinLengthValidator(validators.CharFieldLengthValidator):
     def __init__(self, min_length):
         super(CharFieldMinLengthValidator, self).__init__(min_length, operator.ge,
