@@ -43,3 +43,7 @@ class Parser(object):
             self.errors.extend(field_errors)
 
         return len(self.errors) == 0
+
+    def __iter__(self):
+        for field in self.get_all_field_names_declared_by_user():
+            yield getattr(self, field)
