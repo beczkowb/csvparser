@@ -22,9 +22,6 @@ class Parser(object):
                 next(reader)
 
             for line_num, row in enumerate(reader, start=start_from_line):
-                if end_at_line is not None and line_num > end_at_line:
-                    break
-
                 instance = cls()
                 for i, field in enumerate(fields):
                     setattr(instance, field, row[i])
