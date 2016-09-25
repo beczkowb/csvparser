@@ -5,14 +5,14 @@ import csv
 
 
 class Parser(object):
-    fields_order = None
+    fields_order = []
 
     def __init__(self):
         self.errors = None
 
     @classmethod
-    def parse_file(cls, file_path, start_from_line=1, end_at_line=None,
-                   csv_reader=csv.reader, **kwargs):
+    def parse_file(cls, file_path, start_from_line=1, csv_reader=csv.reader, **kwargs):
+        cls.check_if_fields_order_contains_proper_names()
 
         with open(file_path, 'r') as file:
             reader = csv_reader(file, **kwargs)
@@ -29,7 +29,7 @@ class Parser(object):
 
     @classmethod
     def get_all_field_names_declared_by_user(cls):
-        if cls.fields_order is None:
+        if not cls.fields_order:
             raise RuntimeError('You have to specify fields_order')
 
         return cls.fields_order
@@ -43,6 +43,14 @@ class Parser(object):
             self.errors.extend(field_errors)
 
         return len(self.errors) == 0
+
+    @classmethod
+    def check_if_fields_order_contains_proper_names(cls):
+        for field in cls.fields_order:
+            if not hasattr(cls, field):
+                raise ValueError('fields_order has {field_name}, but {field_name} is not defined on Parser.'.format(field_name=field))
+
+        return True
 
     def __iter__(self):
         for field in self.get_all_field_names_declared_by_user():
