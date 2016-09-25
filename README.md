@@ -12,7 +12,6 @@ Lets say that you want parse csv like below. We want to skip first row(header) a
 impressions,clicks,conversions,cost,ad_id
 1000,200,5,50000.03,1232188
 56000,3224,900,202000.44,8324125
-57000,3424,905,252000.47,--
 ```
 
 Firstly declare proper class:
@@ -35,14 +34,14 @@ class AdPerformanceReportParser(parser.Parser):
 Then parse file and get rows as objects:
 
 ```python
-rows_as_objects = AdPerformanceReportParser.parse_file('/some/path/to/file', start_from_line=2, end_at_line=3)  # parse_file returns iterator 
+rows_as_objects = AdPerformanceReportParser.parse_file('/some/path/to/file', start_from_line=2)  # parse_file returns iterator 
 ```
 
 To customize your parser you can pass your csv.reader and additional arguments for it as kwargs to `parse_file` method:
 ```python
 import csv
 
-rows_as_objects = AdPerformanceReportParser.parse_file('/some/path/to/file', start_from_line=2, end_at_line=3,
+rows_as_objects = AdPerformanceReportParser.parse_file('/some/path/to/file', start_from_line=2,
                                                        csv_reader=csv.reader, delimiter=';', quotechar='|') 
 ```
 
@@ -67,7 +66,7 @@ class AdPerformanceReportParser(parser.Parser):
 
 Now lets use `AdPerformanceReportParser` with validators:
 ```python
-rows_as_objects = AdPerformanceReportParser.parse_file('/some/path/to/file', start_from_line=2, end_at_line=3)
+rows_as_objects = AdPerformanceReportParser.parse_file('/some/path/to/file', start_from_line=2)
 
 for row in rows_as_objects:
     if row.is_valid():
@@ -85,7 +84,6 @@ You can create custom parser field. Lets say that you want to parse csv showed b
 impressions,clicks,conversions,cost,ad_id,ad_image
 1000,200,5,50000.03,1232188,300x200_somefilename.jpg
 56000,3224,900,202000.44,8324125,150x100_somefilename2.jpg
-57000,3424,905,252000.47,--,--
 ```
 
 There is additional column `ad_image` which you want to parse to tuple of 3 strings (width, height, name)
