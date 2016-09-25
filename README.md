@@ -18,14 +18,15 @@ impressions,clicks,conversions,cost,ad_id
 Firstly declare proper class:
 
 ```python
-from csvparser import csvparser
+from csvparser import parser
+from csvparser import fields
 
-class AdPerformanceReportParser(csvparser.Parser):
-    impressions = csvparser.IntegerField()
-    clicks = csvparser.IntegerField()
-    conversions = csvparser.IntegerField()
-    cost = csvparser.DecimalField()
-    ad_id = csvparser.CharField()
+class AdPerformanceReportParser(parser.Parser):
+    impressions = fields.IntegerField()
+    clicks = fields.IntegerField()
+    conversions = fields.IntegerField()
+    cost = fields.DecimalField()
+    ad_id = fields.CharField()
     
     # YOU HAVE TO set this attribute
     fields_order = ['impressions', 'clicks', 'conversions', 'cost', 'ad_id']
@@ -47,16 +48,18 @@ rows_as_objects = AdPerformanceReportParser.parse_file('/some/path/to/file', sta
 
 Parser fields supports validation:
 ```python
-from csvparser import csvparser
+from csvparser import parser
+from csvparser import fields
+from csvparser import validators
 
-class AdPerformanceReportParser(csvparser.Parser):
-    impressions = csvparser.IntegerField(validators=[csvparser.IntegerFieldMinValidator(min_value=0)])
-    clicks = csvparser.IntegerField(validators=[csvparser.IntegerFieldMinValidator(min_value=0)])
-    conversions = csvparser.IntegerField(validators=[csvparser.IntegerFieldMinValidator(min_value=0)])
-    cost = csvparser.DecimalField(validators=[csvparser.DecimalFieldMaxValidator(max_value=decimal.Decimal('5000000.00')),])
-    ad_id = csvparser.CharField(validators=[
-        csvparser.CharFieldMaxLengthValidator(max_length=20),
-        csvparser.CharFieldMinLengthValidator(min_length=10)
+class AdPerformanceReportParser(parser.Parser):
+    impressions = fields.IntegerField(validators=[validators.IntegerFieldMinValidator(min_value=0)])
+    clicks = fields.IntegerField(validators=[validators.IntegerFieldMinValidator(min_value=0)])
+    conversions = fields.IntegerField(validators=[validators.IntegerFieldMinValidator(min_value=0)])
+    cost = fields.DecimalField(validators=[validators.DecimalFieldMaxValidator(max_value=decimal.Decimal('5000000.00')),])
+    ad_id = fields.CharField(validators=[
+        validators.CharFieldMaxLengthValidator(max_length=20),
+        validators.CharFieldMinLengthValidator(min_length=10)
     ])
     
     fields_order = ['impressions', 'clicks', 'conversions', 'cost', 'ad_id']
@@ -88,9 +91,9 @@ impressions,clicks,conversions,cost,ad_id,ad_image
 There is additional column `ad_image` which you want to parse to tuple of 3 strings (width, height, name)
 To do this we have to create new parser field:
 ```python
-from csvparser import csvparser
+from csvparser import fields
 
-class AdImageField(csvparser.ParserField):
+class AdImageField(fields.ParserField):
     @staticmethod
     def create_real_value(raw_value):
         size, name_and_format = raw_value.split('_')
@@ -104,12 +107,14 @@ and declare staticmethod `create_real_value` which return parsed string.
 
 Now, you can use your new field:
 ```python
-class AdPerformanceReportParser(csvparser.Parser):
-    impressions = csvparser.IntegerField()
-    clicks = csvparser.IntegerField()
-    conversions = csvparser.IntegerField()
-    cost = csvparser.DecimalField()
-    ad_id = csvparser.CharField()
+from csvparser import parser
+
+class AdPerformanceReportParser(parser.Parser):
+    impressions = fields.IntegerField()
+    clicks = fields.IntegerField()
+    conversions = fields.IntegerField()
+    cost = fields.DecimalField()
+    ad_id = fields.CharField()
     ad_image = AdImageField()
     
     fields_order = ['impressions', 'clicks', 'conversions', 'cost', 'ad_id', 'ad_image']
