@@ -6,7 +6,7 @@ It uses standard csv package. Tested on python 2.7 and 3.4.
 `pip install csvparser`
 
 # Basic usage
-Lets say that you want parse csv like below. We want to skip first row(header) and last(summary):
+Lets say that you want parse csv like below. We want to skip first row(header):
 
 ```
 impressions,clicks,conversions,cost,ad_id
