@@ -1,4 +1,5 @@
 import decimal
+import datetime
 
 
 class ParserField(object):
@@ -42,24 +43,20 @@ class ParserField(object):
     def errors(self, instance):
         return getattr(instance, self.errors_field_name)
 
-    @staticmethod
-    def create_real_value(raw_value):
+    def create_real_value(self, raw_value):
         pass
 
 
 class CharField(ParserField):
-    @staticmethod
-    def create_real_value(raw_value):
+    def create_real_value(self, raw_value):
         return raw_value
 
 
 class DecimalField(ParserField):
-    @staticmethod
-    def create_real_value(raw_value):
+    def create_real_value(self, raw_value):
         return decimal.Decimal(raw_value)
 
 
 class IntegerField(ParserField):
-    @staticmethod
-    def create_real_value(raw_value):
+    def create_real_value(self, raw_value):
         return int(raw_value)
