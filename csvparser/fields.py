@@ -60,3 +60,12 @@ class DecimalField(ParserField):
 class IntegerField(ParserField):
     def create_real_value(self, raw_value):
         return int(raw_value)
+
+
+class DateField(ParserField):
+    def __init__(self, date_format, validators=None):
+        super().__init__(validators)
+        self.date_format = date_format
+
+    def create_real_value(self, raw_value):
+        return datetime.datetime.strptime(raw_value, self.date_format)
