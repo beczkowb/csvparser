@@ -16,6 +16,10 @@ class Field(object):
         setattr(instance, self.name, value)
 
 
+class TestParser(Parser):
+    pass
+
+
 class IterParserTestCase(unittest.TestCase):
     def test(self):
         class TestParser(Parser):
@@ -58,6 +62,11 @@ class CheckIfFieldsOrderContainsProperNamesTestCase(unittest.TestCase):
         TestParser.fields_order = ['field1', 'field2']
 
         self.assertTrue(TestParser.check_if_fields_order_contains_proper_names())
+
+
+class FromFileObjectTestCase(unittest.TestCase):
+    def test(self):
+        pass
 
 
 if __name__ == '__main__':

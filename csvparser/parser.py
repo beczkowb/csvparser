@@ -12,9 +12,13 @@ class Parser(object):
 
     @classmethod
     def parse_file(cls, file_path, start_from_line=1, csv_reader=csv.reader, **kwargs):
+        return cls.parse_file_object(open(file_path, 'r'), start_from_line, csv_reader, **kwargs)
+
+    @classmethod
+    def parse_file_object(cls, file_object, start_from_line=1, csv_reader=csv.reader, **kwargs):
         cls.check_if_fields_order_contains_proper_names()
 
-        with open(file_path, 'r') as file:
+        with file_object as file:
             reader = csv_reader(file, **kwargs)
             fields = cls.get_all_field_names_declared_by_user()
 
@@ -35,6 +39,9 @@ class Parser(object):
         return cls.fields_order
 
     def is_valid(self):
+        """
+        Validates single instance. Returns boolean value and store errors in self.errors
+        """
         self.errors = []
 
         for field in self.get_all_field_names_declared_by_user():

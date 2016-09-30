@@ -6,6 +6,7 @@ class TestClassWithDateField(object):
     date_attr1 = fields.DateField(date_format='%Y-%m-%d')
     date_attr2 = fields.DateField(date_format='%Y-%m-%d')
 
+
 class TestClassWithDateField2(object):
     date_attr1 = fields.DateField(date_format='%d-%m-%Y')
     date_attr2 = fields.DateField(date_format='%Y-%m-%d')
