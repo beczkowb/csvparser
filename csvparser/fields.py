@@ -64,7 +64,7 @@ class IntegerField(ParserField):
 
 class DateField(ParserField):
     def __init__(self, date_format, validators=None):
-        super().__init__(validators)
+        super(DateField, self).__init__(validators)
         self.date_format = date_format
 
     def create_real_value(self, raw_value):
