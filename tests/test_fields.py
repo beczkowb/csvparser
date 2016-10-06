@@ -12,6 +12,12 @@ class TestClassWithDateField2(object):
     date_attr2 = fields.DateField(date_format='%Y-%m-%d')
 
 
+class TestClassWithNullableFields(object):
+    nullable_field1 = fields.CharField(null_symbols=['--', ''])
+    nullable_field2 = fields.IntegerField(null_symbols=['--', ''])
+    nullable_field3 = fields.IntegerField()
+
+
 class DateFieldTestCase(unittest.TestCase):
     def test_date_format1(self):
         test_object = TestClassWithDateField()
@@ -38,3 +44,25 @@ class DateFieldTestCase(unittest.TestCase):
         self.assertEqual(test_object.date_attr2.year, 2017)
         self.assertEqual(test_object.date_attr2.month, 12)
         self.assertEqual(test_object.date_attr2.day, 27)
+
+
+class NullableFieldTestCase(unittest.TestCase):
+    def test(self):
+        test_object = TestClassWithNullableFields()
+
+        test_object.nullable_field1 = ''
+        self.assertIsNone(test_object.nullable_field1)
+
+        test_object.nullable_field1 = '--'
+        self.assertIsNone(test_object.nullable_field1)
+
+        test_object.nullable_field2 = '--'
+        self.assertIsNone(test_object.nullable_field2)
+
+        test_object.nullable_field2 = ''
+        self.assertIsNone(test_object.nullable_field2)
+
+        test_object.nullable_field3 = '--'
+
+        with self.assertRaises(ValueError) as err:
+            x = test_object.nullable_field3

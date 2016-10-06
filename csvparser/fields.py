@@ -5,12 +5,13 @@ import datetime
 class ParserField(object):
     fields_counter = 0
 
-    def __init__(self, validators=None):
+    def __init__(self, validators=None, null_symbols=None):
         if validators is None:
             self.validators = []
         else:
             self.validators = validators
 
+        self.null_symbols = null_symbols
         self.name = None
         self.init_done = False
         self.name = '_parser_field' + str(ParserField.fields_counter)
@@ -21,7 +22,12 @@ class ParserField(object):
         if instance is None:
             return self
         else:
-            return self.create_real_value(getattr(instance, self.name))
+            raw_value = getattr(instance, self.name)
+
+            if self.null_symbols is not None and raw_value in self.null_symbols:
+                return None
+            else:
+                return self.create_real_value(raw_value)
 
     def __set__(self, instance, value):
         setattr(instance, self.name, value)
@@ -63,8 +69,8 @@ class IntegerField(ParserField):
 
 
 class DateField(ParserField):
-    def __init__(self, date_format, validators=None):
-        super(DateField, self).__init__(validators)
+    def __init__(self, date_format, **kwargs):
+        super(DateField, self).__init__(**kwargs)
         self.date_format = date_format
 
     def create_real_value(self, raw_value):
