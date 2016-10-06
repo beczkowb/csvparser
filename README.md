@@ -92,8 +92,7 @@ To do this we have to create new parser field:
 from csvparser import fields
 
 class AdImageField(fields.ParserField):
-    @staticmethod
-    def create_real_value(raw_value):
+    def create_real_value(self, raw_value):
         size, name_and_format = raw_value.split('_')
         width, height = size.split('x')
         name, format = name_and_format.split('.')
