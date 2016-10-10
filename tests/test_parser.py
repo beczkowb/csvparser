@@ -1,7 +1,6 @@
 import unittest
 import os
 import decimal
-import datetime
 from csvparser.parser import Parser
 from csvparser import fields
 
