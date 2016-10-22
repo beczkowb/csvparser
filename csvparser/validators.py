@@ -2,10 +2,20 @@ import operator
 import decimal
 
 
-class CompareValidator(object):
+class Validator(object):
+    def __init__(self):
+        self.errors = None
+
+    def is_valid(self, object_to_validate, field_name):
+        """returns True or False and store errors at self.errors"""
+        pass
+
+
+class CompareValidator(Validator):
     def __init__(self, threshold, compare_operator, error_message_template):
+        super(CompareValidator, self).__init__()
+
         self.threshold = threshold
-        self.errors = []
         self.compare_operator = compare_operator
         self.error_message_template = error_message_template
 

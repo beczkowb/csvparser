@@ -73,6 +73,27 @@ class AdPerformanceReportParser(Parser):
     fields_order = ['impressions', 'clicks', 'conversions', 'cost', 'ad_id']
 
 
+class AdPerformanceReportWithNullableFieldsParser(Parser):
+    impressions = fields.IntegerField(null_symbols=['--', ''])
+    clicks = fields.IntegerField()
+    conversions = fields.IntegerField()
+    cost = fields.DecimalField()
+    ad_id = fields.CharField(null_symbols=['--', ''])
+
+    fields_order = ['impressions', 'clicks', 'conversions', 'cost', 'ad_id']
+
+
+class AdPerformanceReportWithNullableFieldsAndDateFieldParser(Parser):
+    impressions = fields.IntegerField(null_symbols=['--', ''])
+    clicks = fields.IntegerField()
+    conversions = fields.IntegerField()
+    cost = fields.DecimalField()
+    ad_id = fields.CharField(null_symbols=['--', ''])
+    date = fields.DateField('%Y-%m-%d')
+
+    fields_order = ['impressions', 'clicks', 'conversions', 'cost', 'ad_id', 'date']
+
+
 class FromFileObjectTestCase(unittest.TestCase):
     def test(self):
         test_file_path = os.path.join('test_files', 'adperformancereport_with_headers.csv')
@@ -92,5 +113,48 @@ class FromFileObjectTestCase(unittest.TestCase):
         self.assertEqual(results[1].cost, decimal.Decimal('202000.44'))
         self.assertEqual(results[1].ad_id, '8324125')
 
-if __name__ == '__main__':
-    unittest.main()
+
+class ParserWithNullableFieldsTestCase(unittest.TestCase):
+    def test(self):
+        test_file_path = os.path.join('test_files', 'adperformancereport_with_headers_and_null_values.csv')
+        results = AdPerformanceReportWithNullableFieldsParser.parse_file(test_file_path, start_from_line=2)
+        results = list(results)
+
+        self.assertEqual(results[0].impressions, None)
+        self.assertEqual(results[0].clicks, 200)
+        self.assertEqual(results[0].conversions, 5)
+        self.assertEqual(results[0].cost, decimal.Decimal('50000.03'))
+        self.assertEqual(results[0].ad_id, None)
+
+        self.assertEqual(results[1].impressions, None)
+        self.assertEqual(results[1].clicks, 3224)
+        self.assertEqual(results[1].conversions, 900)
+        self.assertEqual(results[1].cost, decimal.Decimal('202000.44'))
+        self.assertEqual(results[1].ad_id, None)
+
+
+class ParserWithDateFieldTestCase(unittest.TestCase):
+    def test(self):
+        test_file_path = os.path.join('test_files', 'adperformancereport_with_headers_and_null_values_and_date_field.csv')
+        results = AdPerformanceReportWithNullableFieldsAndDateFieldParser.parse_file(test_file_path, start_from_line=2)
+        results = list(results)
+
+        self.assertEqual(results[0].impressions, None)
+        self.assertEqual(results[0].clicks, 200)
+        self.assertEqual(results[0].conversions, 5)
+        self.assertEqual(results[0].cost, decimal.Decimal('50000.03'))
+        self.assertEqual(results[0].ad_id, None)
+
+        self.assertEqual(results[0].date.year, 2016)
+        self.assertEqual(results[0].date.month, 9)
+        self.assertEqual(results[0].date.day, 30)
+
+        self.assertEqual(results[1].impressions, None)
+        self.assertEqual(results[1].clicks, 3224)
+        self.assertEqual(results[1].conversions, 900)
+        self.assertEqual(results[1].cost, decimal.Decimal('202000.44'))
+        self.assertEqual(results[1].ad_id, None)
+
+        self.assertEqual(results[1].date.year, 2016)
+        self.assertEqual(results[1].date.month, 12)
+        self.assertEqual(results[1].date.day, 20)

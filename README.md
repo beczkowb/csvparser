@@ -37,7 +37,7 @@ Then parse file and get rows as objects:
 rows_as_objects = AdPerformanceReportParser.parse_file('/some/path/to/file', start_from_line=2)  # parse_file returns iterator 
 ```
 
-To customize your parser you can pass your csv.reader and additional arguments for it as kwargs to `parse_file` method:
+To customize your parser you can pass your `csv.reader` and additional arguments for it as kwargs to `parse_file` method:
 ```python
 import csv
 
@@ -73,6 +73,22 @@ for row in rows_as_objects:
         pass  # do something
     else:
         pass  # do something else
+```
+
+# Handling null values
+If your csv file contains some null values, you can specify what should be treated as null:
+```python
+from csvparser import parser
+from csvparser import fields
+
+class AdPerformanceReportParser(parser.Parser):
+    impressions = fields.IntegerField()
+    clicks = fields.IntegerField(null_symbols=['--', ''])
+    conversions = fields.IntegerField()
+    cost = fields.DecimalField(null_symbols=['--', ''])
+    ad_id = fields.CharField()
+    
+    fields_order = ['impressions', 'clicks', 'conversions', 'cost', 'ad_id']
 ```
 
 # Extending basic functionality
@@ -118,4 +134,40 @@ class AdPerformanceReportParser(parser.Parser):
 ```
 
 ## Creating custom validators
-There is no easy way to create custom validators yet. There will be in next version.
+If you want to create custom validator you should use(by subclassing) `csvparser.validators.Validator` class.
+
+```python
+class Validator(object):
+    def __init__(self):
+        self.errors = None
+
+    def is_valid(self, object_to_validate, field_name):
+        """returns True or False and store errors at self.errors"""
+        pass
+```
+
+Example of custom validator:
+
+```python
+from csvparser.validators import Validator
+
+class DecimalMinMaxValidator(Validator):
+    def __init__(self, min_value, max_value):
+        if not isinstance(max_value, decimal.Decimal) or not isinstance(min_value, decimal.Decimal):
+            raise TypeError('max_value and min_value on DecimalFieldMaxValidator has to be decimal')
+            
+        super(CharFieldMinMaxValidator, self).__init__()
+        self.min_value = min_value
+        self.max_value = max_value
+        
+    def is_valid(self, object_to_validate, field_name):
+        if object_to_validate > self.max_value:
+            self.errors = ['{field_name} value higher than max'.format(field_name=field_name)]
+            return False
+        elif object_to_validate < self.min_value:
+            self.errors = ['{field_name} value lower than min'.format(field_name=field_name)]
+            return False
+        else:
+            return True
+
+```
