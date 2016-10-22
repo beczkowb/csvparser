@@ -37,7 +37,7 @@ Then parse file and get rows as objects:
 rows_as_objects = AdPerformanceReportParser.parse_file('/some/path/to/file', start_from_line=2)  # parse_file returns iterator 
 ```
 
-To customize your parser you can pass your csv.reader and additional arguments for it as kwargs to `parse_file` method:
+To customize your parser you can pass your `csv.reader` and additional arguments for it as kwargs to `parse_file` method:
 ```python
 import csv
 
@@ -73,6 +73,22 @@ for row in rows_as_objects:
         pass  # do something
     else:
         pass  # do something else
+```
+
+# Handling null values
+If your csv file contains some null values, you can specify what should be treated as null:
+```python
+from csvparser import parser
+from csvparser import fields
+
+class AdPerformanceReportParser(parser.Parser):
+    impressions = fields.IntegerField()
+    clicks = fields.IntegerField(null_symbols=['--', ''])
+    conversions = fields.IntegerField()
+    cost = fields.DecimalField(null_symbols=['--', ''])
+    ad_id = fields.CharField()
+    
+    fields_order = ['impressions', 'clicks', 'conversions', 'cost', 'ad_id']
 ```
 
 # Extending basic functionality
