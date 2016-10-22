@@ -3,7 +3,7 @@ Library for parsing and validating csv files using declared django-style parser 
 It uses standard csv package. Tested on python 2.7 and 3.4.
 
 # Installation
-`pip install csvparser==0.4.0`
+`pip install csvparser`
 
 # Basic usage
 Lets say that you want parse csv like below. We want to skip first row(header):
